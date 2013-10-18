@@ -1,0 +1,141 @@
+<html>
+<head>
+	<title></title>
+
+	<script type="text/javascript" src="jquery-2.0.3.min.js"></script>
+	<script type="text/javascript">
+
+$(function() {
+	$('#file-input').change(function(e) {
+		var file = e.target.files[0],
+			imageType = /image.*/;
+
+		if (!file.type.match(imageType))
+			return;
+
+		var reader = new FileReader();
+		reader.onload = fileOnload;
+		reader.readAsDataURL(file);
+	});
+
+	function fileOnload(e) {
+		//var $img = $('<img>', { src: e.target.result });
+		var img = new Image();
+		img.src = e.target.result;
+		var canvas = $('#myCanvas')[0];
+		var context = canvas.getContext('2d');
+
+		img.onload = function() {
+			context.drawImage(this, 0, 0);
+
+			var imageWidth = 32;
+			var imageHeight = 32;
+			var tileWidth = 16;
+			var tileHeight = 16;
+
+			var tilesX = imageWidth / tileWidth;
+			var tilesY = imageHeight / tileHeight;
+			var totalTiles = tilesX * tilesY;        
+			var tileData = new Array();
+
+			for(var i = 0; i < tilesY; i++) {
+				for(var j = 0; j < tilesX; j++) {
+					// Store the image data of each tile in the array.
+					tileData.push(context.getImageData(j*tileWidth, i*tileHeight, tileWidth, tileHeight));
+				}
+			}
+			//From here you should be able to draw your images back into a canvas like so:
+			context.clearRect(0, 0, canvas.width, canvas.height);
+			context.putImageData(tileData[0], 10, 10);
+			context.putImageData(tileData[1], 30, 10);
+			context.putImageData(tileData[2], 50, 10);
+			context.putImageData(tileData[3], 70, 10);
+		};
+	}
+});
+
+	
+
+/*var canvas = document.getElementById("myCanvas");
+var ctx = canvas.getContext("2d");
+var imageObj = new Image();
+
+imageObj.onload = function() {
+	ctx.drawImage(imageObj, 0, 0);
+	imageObj.src = "tilesetImageLocationHere";
+
+	console.log(imageObj);
+
+	var imageWidth = 32;
+	var imageHeight = 32;
+	var tileWidth = 16;
+	var tileHeight = 16;
+
+	var tilesX = imageWidth / tileWidth;
+	var tilesY = imageHeight / tileHeight;
+	var totalTiles = tilesX * tilesY;        
+	var tileData = new Array();
+	for(var i = 0; i < tilesY; i++) {
+		for(var j = 0; j < tilesX; j++) {
+			// Store the image data of each tile in the array.
+			tileData.push(ctx.getImageData(j*tileWidth, i*tileHeight, tileWidth, tileHeight);
+		}
+	}
+	//From here you should be able to draw your images back into a canvas like so:
+	ctx.putImageData(tileData[0], x, y);
+}*/
+
+/*$scope.imateInit = function() {
+		var canvas = document.getElementById("myCanvas");
+		var ctx = canvas.getContext("2d");
+		var imageObj = new Image();
+
+		imageObj.onload = function() {
+			ctx.drawImage(imageObj, 0, 0);
+			imageObj.src = "tilesetImageLocationHere";
+		};
+
+		var imageWidth = x;
+		var imageHeight = x;
+		var tileWidth = x;
+		var tileHeight = x;
+
+		var tilesX = imageWidth / tileWidth;
+		var tilesY = imageHeight / tileHeight;
+		var totalTiles = tilesX * tilesY;        
+		var tileData = new Array();
+
+		for(var i = 0; i < tilesY; i++) {
+			for(var j = 0; j < tilesX; j++) {
+				// Store the image data of each tile in the array.
+				tileData.push(ctx.getImageData(j*tileWidth, i*tileHeight, tileWidth, tileHeight);
+			}
+		}
+		//From here you should be able to draw your images back into a canvas like so:
+		ctx.putImageData(tileData[0], x, y);
+	};
+
+
+	var fd = new FormData();
+    //Take the first selected file
+    fd.append("file", files[0]);
+
+    $http.post(uploadUrl, fd, {
+        withCredentials: true,
+        headers: {'Content-Type': undefined },
+        transformRequest: angular.identity
+    }).success( ...all right!... ).error( ..damn!... );*/
+
+	</script>
+
+</head>
+<body>
+
+	<canvas id="myCanvas" style="height: 300px; width: 500px">
+
+	</canvas>
+
+	<input type="file" id="file-input">
+
+</body>
+</html>

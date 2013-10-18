@@ -1,0 +1,210 @@
+<html ng-app="upload">
+<head>
+	<title></title>
+	<script type="text/javascript" src="jquery.js"></script>
+	<script type="text/javascript" src="angular.min.js"></script>
+	<script type="text/javascript" src="angular-file-upload.js"></script>
+	<script type="text/javascript" src="canvas-to-blob.js"></script>
+	<script type="text/javascript">
+
+		angular.module('upload', ['angularFileUpload'])
+		.controller('uploadCtrl', ['$scope', '$http', function($scope, $http) {
+			$scope.fileName = '';
+			$scope.piece = '';
+
+			$scope.onFileSelect = function($files) {
+				//$files: an array of files selected, each file has name, size, and type.
+				for (var i = 0; i < $files.length; i++) {
+					var $file = $files[i];
+					$http.uploadFile({
+						url: '/upload', //upload.php script, node.js route, or servlet upload url)
+						// headers: {'optional', 'value'}
+						data: {fileName: $scope.fileName},
+						file: $file
+					}).progress(function(evt) {
+						console.log('percent: ' + parseInt(100.0 * evt.loaded / evt.total));
+					}).then(function(data, status, headers, config) {
+						// file is uploaded successfully
+						console.log(data);
+					});
+				}
+			};
+
+			$scope.checkInput = function() {
+				var input = $('#myinput');
+				console.log(input[0].files);
+			};
+
+			$scope.upload = function() {
+				var input = $('#myinput');
+				var file = input[0].files[0];
+
+				$http.uploadFile({
+					url: '/upload', //upload.php script, node.js route, or servlet upload url)
+					// headers: {'optional', 'value'}
+					data: {fileName: $scope.fileName},
+					file: file
+				}).progress(function(evt) {
+					console.log('percent: ' + parseInt(100.0 * evt.loaded / evt.total));
+				}).then(function(data, status, headers, config) {
+					// file is uploaded successfully
+					console.log(data);
+				});
+			};
+
+			$scope.newImage = function() {
+				var input = $('#myinput');
+				var file = input[0].files[0];
+				var reader = new FileReader();
+
+				reader.onload = function(e) {
+					var img = new Image();
+					img.src = e.target.result;
+					var canvas = $('#myCanvas')[0];
+					var context = canvas.getContext('2d');
+
+					img.onload = function() {
+						context.drawImage(this, 0, 0);
+
+						var imageWidth = 32;
+						var imageHeight = 32;
+						var tileWidth = 16;
+						var tileHeight = 16;
+
+						var tilesX = imageWidth / tileWidth;
+						var tilesY = imageHeight / tileHeight;
+						var totalTiles = tilesX * tilesY;        
+						var tileData = new Array();
+
+						for(var i = 0; i < tilesY; i++) {
+							for(var j = 0; j < tilesX; j++) {
+								// Store the image data of each tile in the array.
+								tileData.push(context.getImageData(j*tileWidth, i*tileHeight, tileWidth, tileHeight));
+							}
+						}
+						//From here you should be able to draw your images back into a canvas like so:
+						context.clearRect(0, 0, canvas.width, canvas.height);
+						console.log(tileData[0].data);
+						context.putImageData(tileData[0], 10, 10);
+						context.putImageData(tileData[1], 30, 10);
+						context.putImageData(tileData[2], 50, 10);
+						context.putImageData(tileData[3], 70, 10);
+
+						var blob = new Blob(tileData[0].data);
+						console.log(blob);
+					};
+				};
+
+				reader.readAsDataURL(file);
+			};
+
+			$scope.doBlob = function() {
+				var input = $('#myinput');
+				var file = input[0].files[0];
+				console.log(file);
+				//console.log(file);
+				//var blob = new Blob(['1234567890']);
+
+				/*var img = new Image();
+				img.src = e.target.result;*/
+				var reader = new FileReader();
+
+				reader.onload = function(e) {
+					console.log('creating new image...');
+					var img = new Image();
+					img.src = e.target.result;
+					var canvas = document.createElement('canvas');
+					var ctx = canvas.getContext('2d');
+
+					canvas.width = 32;
+					canvas.height = 32;
+
+					ctx.drawImage(img, 0, 0, 32, 32, 0, 0, canvas.width, canvas.height);
+					//var canvasData = canvas.toDataURL("image/png");
+
+					//$scope.piece = canvasData;
+
+					console.log("data from cropped image:");
+					// console.log(canvasData);
+					//var newImage = canvasData;
+					//var blob = new Blob([canvasData], {type: 'image/png'});
+					//var blob = canvas.toBlob();
+
+
+					canvas.toBlob(function (blob) {
+							// Do something with the blob object,
+							// e.g. creating a multipart form for file uploads:
+
+							// var formData = new FormData();
+							// formData.append('file', blob, fileName);
+
+							console.log(blob);
+							//blob.name = 'cave.png';
+
+							$http.uploadFile({
+								url: '/upload', //upload.php script, node.js route, or servlet upload url)
+								// headers: {'optional', 'value'}
+								data: {fileName: $scope.fileName},
+								file: blob
+							}).progress(function(evt) {
+								console.log('percent: ' + parseInt(100.0 * evt.loaded / evt.total));
+							}).then(function(data, status, headers, config) {
+								// file is uploaded successfully
+								console.log(data);
+							});
+
+							/* ... */
+						},
+						'image/png'
+					);
+					
+					
+				};
+
+				reader.readAsDataURL(file);
+				/*var canvas = $('#myCanvas')[0];
+				var context = canvas.getContext('2d');
+
+				context.getImageData(j*tileWidth, i*tileHeight, tileWidth, tileHeight)
+				var canvas = new Canvas();
+				var newContext = canvas.getContext();
+				context.drawImage(sizeofcanvas, sizeofcanvas, xonimage, yontheimage, width, height);*/
+
+				/*
+				var canvas = document.createElement('canvas');
+				var ctx = canvas.getContext('2d');
+
+				canvas.width = 32;
+				canvas.height = 32;
+
+				// draw the image with offset
+				ctx.drawImage(img, 0, 0, 32, 32, 0, 0, canvas.width, canvas.height);
+
+				// output the base64 of the cropped image
+				//document.getElementById('output').innerHTML = "<img id='target2' src=" + canvas.toDataURL('image/jpeg') + ">";
+				var canvasData = canvas.toDataURL("image/jpg");
+				console.log(canvasData);
+				//var blob = new Blob();
+				*/
+			};
+		}]);
+
+	</script>
+</head>
+<body ng-controller="uploadCtrl">
+	<input type="text" ng-model="fileName">
+	<input type="text" ng-model="myModelObj">
+	<input type="file" ng-file-select="onFileSelect($files)" >
+	<input type="file" ng-file-select="onFileSelect($files)" multiple>
+	<div class="drop-box" ng-file-drop="onFileSelect($files);">drop files here</div>
+	<br>
+	<p>My input:</p>
+	<input type="file" id="myinput">
+	<button ng-click="checkInput()">Check input</button>
+	<button ng-click="upload()">Upload!</button>
+	<button ng-click="newImage()">new image</button>
+	<button ng-click="doBlob()">Blob</button>
+	<canvas id="myCanvas" style="height: 200px; width: 500px; background-color: blue"></canvas>
+	<img ng-src="{{piece}}">
+</body>
+</html>

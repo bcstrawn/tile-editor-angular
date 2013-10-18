@@ -1,0 +1,75 @@
+<html ng-app="app">
+<head>
+	<title></title>
+	<script type="text/javascript" src="angular.min.js"></script>
+	<script type="text/javascript" src="jquery.js"></script>
+	<script type="text/javascript">
+/*$(document).ready(function () {
+	$("#uploadbutton").click(function () {
+		var filename = $("#file").val();
+
+		$.ajax({
+			type: "POST",
+			url: "addFile.do",
+			enctype: 'multipart/form-data',
+			data: {
+				file: filename
+			},
+			success: function () {
+				alert("Data Uploaded: ");
+			}
+		});
+	});
+});*/
+
+angular.module('app', [])
+.controller('uploadCtrl', ['$scope', '$http', function($scope, $http) {
+	console.log($http);
+	
+	$scope.upload = function() {
+		var form = $('#imageForm');
+		// var formData = new FormData(form[0]);
+		var formData = form.serialize();
+		console.log(formData);
+		/*$.ajax({
+			url: 'upload.php',  //Server script to process data
+			type: 'POST',
+			xhr: function() {  // Custom XMLHttpRequest
+				var myXhr = $.ajaxSettings.xhr();
+				if(myXhr.upload){ // Check if upload property exists
+					myXhr.upload.addEventListener('progress',progressHandlingFunction, false); // For handling the progress of the upload
+				}
+				return myXhr;
+			},
+			//Ajax events
+			beforeSend: beforeSendHandler,
+			success: completeHandler,
+			error: errorHandler,
+			// Form data
+			data: formData,
+			//Options to tell jQuery not to process data or worry about content-type.
+			cache: false,
+			contentType: false,
+			processData: false
+		});*/
+
+		$http.post('/upload', formData).success(function() {
+			console.log('uploaded');
+		});
+	};
+}]);
+	</script>
+</head>
+<body ng-controller="uploadCtrl">
+
+<!-- 	<span>File</span>
+	<input type="file" id="file" name="file" size="10"/>
+	<input id="uploadbutton" ng-click="upload()" type="button" value="Upload"/> -->
+
+	<form enctype="multipart/form-data" id="imageForm">
+		<input name="file" type="file" />
+		<input ng-click="upload()" type="button" value="Upload" />
+	</form>
+
+</body>
+</html>

@@ -1,0 +1,116 @@
+.tile {
+	display: inline-block;
+	border-bottom: 1px solid black;
+	border-right: 1px solid black;
+	position: relative;
+}
+
+.minimapTile {
+	height: 8px;
+	width: 8px;
+	border: none;
+}
+
+#minimap {
+	position: relative;
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	cursor: default;
+}
+
+#border {
+	width: 128px;
+	height: 80px;
+	position: absolute;
+	border: 1px solid black;
+	pointer-events: none;
+}
+
+.trans {
+	position: absolute;
+	top: 0;
+	left: 0;
+	height: 32px;
+	width: 32px;
+}
+
+.tileRow {
+	/*clear: both;
+	width: auto;*/
+	display: block;
+}
+
+#editor {
+	margin: 10px;
+	width: 800px;
+	height: 600px;
+	border: 1px solid black;
+}
+
+#editWorld {
+	width: 546px;
+	height: 360px;
+	overflow: hidden;
+}
+
+#left {
+	width: 550;
+	margin-right: 25px;
+	float: left;
+	border: 1px solid black;
+}
+
+#right {
+	width: 175px;
+	height: 300px;
+	float: left;
+	border: 1px solid black;
+}
+
+#menubar {
+	margin-bottom: 25px;
+	border: 1px solid black;
+	height: 100px;
+}
+
+#editPanes {
+	background-color: blue;
+	border: 1px solid black;
+	height: 400px;
+	overflow: hidden;
+}
+
+#editWorld {
+	background-color: red;
+	border: 1px solid black;
+}
+
+.highlight {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	height: 32px;
+	width: 32px;
+	opacity: 0.4;
+}
+
+#selectTiles {
+	user-select: none;
+	-o-user-select: none;
+	-moz-user-select: none;
+	-khtml-user-select: none;
+	-webkit-user-select: none;
+
+	overflow: hidden;
+}
+
+
+
+
+.nav {
+	margin-bottom: 0px;
+}

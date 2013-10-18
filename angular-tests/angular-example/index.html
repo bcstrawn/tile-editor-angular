@@ -1,0 +1,50 @@
+<html ng-app="Home">
+<head>
+	<title></title>
+	<script type="text/javascript" src="lib/angular.min.js"></script>
+	<script type="text/javascript" src="app.js"></script>
+</head>
+<body ng-controller="testCtrl">
+	<div >{{testData}}</div>
+	<div ng-repeat="user in Users.users">{{user.name}}</div>
+	<input type="text" ng-model="name">
+	<p>{{name}}</p>
+
+	<form>
+
+		<button ng-click="submit()">Submit!</button>
+	</form>
+</body>
+
+<hr />
+
+<form ng-upload action="/upload-full-form">
+	<p>
+		<label>Fullname:</label>
+		<input type="text" name="fullname" ng-model="fullname" />
+	</p>
+	<p>
+		<label>Gender:</label>
+		<input type="text" name="gender" ng-model="gender" />
+	</p>
+	<p>
+		<label>Favorite Color:</label>
+		<input type="text" name="color" ng-model="color"/>
+	</p>
+	<p>
+		<label>Your picture (file will not be saved on the server):</label>
+		<input type="file" name="file" />
+	</p>
+	<p>
+		<input type="submit" class="btn" value="Submit" 
+		upload-submit="uploadComplete(content, completed)" />
+	</p>
+</form>
+<div class="alert alert-info">Server Response: {{response | json}}</div>
+<div>
+	Fullname: <b>{{response.fullname}}</b><br />
+	Gender: <b>{{response.gender}}</b><br />
+	Favourite Color: <span ng-style="response.style">{{response.color}}</span><br />
+	Picture: {{response.pictureUrl}}
+</div>
+</html>

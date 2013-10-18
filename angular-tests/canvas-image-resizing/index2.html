@@ -1,0 +1,37 @@
+<html>
+<head>
+	<title></title>
+	<script type="text/javascript" src="jquery-2.0.3.min.js"></script>
+	<script type="text/javascript">
+
+$(function() {
+	function draw() {
+		var ctx = document.getElementById('canvas').getContext('2d')
+		, img = new Image()
+		, f = document.getElementById("uploadimage").files[0]
+		, url = window.URL || window.webkitURL
+		, src = url.createObjectURL(f);
+
+		img.src = src;
+		img.onload = function(){
+			ctx.drawImage(img,0,0);
+			url.revokeObjectURL(src);
+		}
+	}
+
+	$('#uploadimage').change(function(e) {
+		console.log('drawing...');
+		draw();
+	});
+});
+
+
+	</script>
+</head>
+<body>
+
+	<canvas id="canvas" style="width: 300px; height: 300px"></canvas>
+	<input type='file' name='img' size='65' id='uploadimage' />
+
+</body>
+</html>
