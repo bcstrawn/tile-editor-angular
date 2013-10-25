@@ -12,6 +12,8 @@
 			<button ng-click="addImage()" style="margin:20px">Add Image</button>
 			<button ng-click="saveMap()" style="margin:20px">Save Map</button>
 			<button ng-click="loadMap()" style="margin:20px">Load Map</button>
+			<input type="file" id="spriteToUpload">
+			<button ng-click="uploadSprite()" style="margin:20px">Upload Sprite</button>
 		</div>
 		<div id="left">
 			<tabs id="editPanes">
@@ -73,12 +75,13 @@
 		</div>
 	</div>
 
-	<!-- <img src="http://www.fi.edu/inline2/ben3.gif" alt="ben"> -->
-	<input type="file" name="file" onchange="angular.element(this).scope().uploadFile(this.files)"/>
+	<input type="hidden" ng-file-select="onFileSelect($files)" >
 
 	<script src="lib/jquery.js"></script>
 	<script src="lib/angular.min.js"></script>
 	<script src="lib/angular-resource.min.js"></script>
+	<script src="lib/canvas-to-blob.min.js"></script>
+	<script src="lib/angular-file-upload.js"></script>
 	<script src="lib/ui-bootstrap-tpls-0.3.0.min.js"></script>
 	<script src="js/tiles/tiles.js"></script>
 	<script src="js/world/world.js"></script>

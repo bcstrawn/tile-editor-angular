@@ -1,4 +1,4 @@
-angular.module('tileEditor', ['ui.bootstrap', 'Editing', 'Tiles', 'Selection', 'World', 'Minimap'])
+angular.module('tileEditor', ['angularFileUpload', 'ui.bootstrap', 'Editing', 'Tiles', 'Selection', 'World', 'Minimap'])
 .controller('EditorCtrl', ['$scope', 'Tiles', 'World', 'SelectionTiles', 'World', '$http',
 	function($scope, Tiles, World, SelectionTiles, World, $http) {
 	$scope.world = World.query();
@@ -28,6 +28,45 @@ angular.module('tileEditor', ['ui.bootstrap', 'Editing', 'Tiles', 'Selection', '
 		$http.get('/world').success(function(world) {
 			World.setWorld(world);
 		});
+	};
+
+	$scope.uploadSprite = function() {
+		var input = $('#spriteToUpload');
+		var file = input[0].files[0];
+		var reader = new FileReader();
+
+		reader.onload = function(e) {
+			var img = new Image();
+			img.src = e.target.result;
+			var canvas = document.createElement('canvas');
+			var context = canvas.getContext('2d');
+
+			canvas.width = 32;
+			canvas.height = 32;
+
+			context.drawImage(img, 0, 0, 32, 32, 0, 0, canvas.width, canvas.height);
+
+			$scope.uploadImageFromCanvas(canvas);
+		};
+
+		reader.readAsDataURL(file);
+	};
+
+	$scope.uploadImageFromCanvas = function(canvas) {
+		canvas.toBlob(function (blob) {
+			console.log(blob);
+			$http.uploadFile({
+				url: '/upload',
+				// headers: {'optional', 'value'}
+				data: {fileName: $scope.fileName},
+				file: blob
+			}).progress(function(evt) {
+				console.log('percent: ' + parseInt(100.0 * evt.loaded / evt.total));
+			}).then(function(data, status, headers, config) {
+				console.log(data);
+			});
+		},
+		'image/png');
 	};
 
 	/*$scope.imateInit = function() {

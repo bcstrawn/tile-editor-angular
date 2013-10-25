@@ -38,4 +38,8 @@ angular.module('Editing', ['ui.bootstrap', 'World', 'Selection', 'Tiles'])
 		var newTiles = TileFactory.generateTiles(SelectedTiles.selectedTiles);
 		World.setTiles(x, y, newTiles);
 	};
+}])
+
+.directive('editTiles', [function() {
+
 }]);
