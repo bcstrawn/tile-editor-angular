@@ -1,7 +1,8 @@
 var express = require('express'),
 	app = express(),
 	fs = require('fs'),
-	path = require('path');
+	path = require('path'),
+	exec = require('child_process').exec;
 
 app.configure(function() {
     app.use(express.static(__dirname + '/public'));
@@ -30,6 +31,20 @@ app.get('/world', function(req, res) {
 	res.send(world);
 });
 
+var splitImage = function(path) {
+	var cmd = 'convert ' + path + ' -crop 16x16 ' + path;
+	exec(cmd, function(err, stdout, stderr) {
+		if (err) throw err;
+		console.log('cropped');
+	});
+};
+
+var getRelativePath = function(path) {
+	var pieces = path.split('\\');
+	var relativePath = pieces[pieces.length-2] + '\\' + pieces[pieces.length-1];
+	return relativePath;
+};
+
 var saveFile = function(req, callback) {
 	var tempPath = req.files.file.path,
 		targetPath = path.resolve('./uploads/' + req.body.fileName + '.png');
@@ -40,6 +55,9 @@ var saveFile = function(req, callback) {
 		fs.rename(tempPath, targetPath, function(err) {
 			if (err) throw err;
 			console.log("Upload completed!");
+			var relativePath = getRelativePath(targetPath);
+			console.log(relativePath);
+			splitImage(relativePath);
 			callback();
 		});
 	} else {

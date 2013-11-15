@@ -1,4 +1,4 @@
-angular.module('tileEditor', ['angularFileUpload', 'ui.bootstrap', 'Editing', 'Tiles', 'Selection', 'World', 'Minimap'])
+angular.module('tileEditor', ['angularFileUpload', 'ui.bootstrap', 'Editing', 'Tiles', 'Selection', 'World', 'Minimap', 'Upload'])
 .controller('EditorCtrl', ['$scope', 'Tiles', 'World', 'SelectionTiles', 'World', '$http',
 	function($scope, Tiles, World, SelectionTiles, World, $http) {
 	$scope.world = World.query();

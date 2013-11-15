@@ -109,6 +109,6 @@ angular.module('Selection', ['Tiles'])
 
 .factory('SelectionTiles', ['Tiles', function(Tiles) {
 	return {
-		currentTiles: Tiles.query()
+		currentTiles: Tiles.tiles
 	};
 }]);

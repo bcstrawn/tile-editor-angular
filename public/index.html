@@ -12,8 +12,6 @@
 			<button ng-click="addImage()" style="margin:20px">Add Image</button>
 			<button ng-click="saveMap()" style="margin:20px">Save Map</button>
 			<button ng-click="loadMap()" style="margin:20px">Load Map</button>
-			<input type="file" id="spriteToUpload">
-			<button ng-click="uploadSprite()" style="margin:20px">Upload Sprite</button>
 		</div>
 		<div id="left">
 			<tabs id="editPanes">
@@ -33,7 +31,13 @@
 					</div>
 				</pane>
 				<pane heading="Tiles">
-					<div edit-tiles></div>
+					<div ng-controller="UploadCtrl">
+						<form>
+							<input type="text" ng-model="fileName">
+							<input type="file" id="myinput">
+							<button type="submit" ng-click="uploadFile()" ng-file-select="">Upload</button>
+						</form>
+					</div>
 				</pane>
 			</tabs>
 		</div>
@@ -75,10 +79,8 @@
 		</div>
 	</div>
 
-	<input type="hidden" ng-file-select="onFileSelect($files)" >
-
 	<script src="lib/jquery.js"></script>
-	<script src="lib/angular.min.js"></script>
+	<script src="lib/angular.js"></script>
 	<script src="lib/angular-resource.min.js"></script>
 	<script src="lib/canvas-to-blob.min.js"></script>
 	<script src="lib/angular-file-upload.js"></script>
@@ -88,6 +90,7 @@
 	<script src="js/editing/editing.js"></script>
 	<script src="js/selection/selection.js"></script>
 	<script src="js/minimap/minimap.js"></script>
+	<script src="js/upload/upload.js"></script>
 	<script src="js/app.js"></script>
 </body>
 </html>
