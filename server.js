@@ -32,7 +32,7 @@ app.get('/world', function(req, res) {
 });
 
 var splitImage = function(path) {
-	var cmd = 'convert ' + path + ' -crop 16x16 ' + path;
+	var cmd = 'convert ' + path + ' -crop 16x16 -filter Point -resize x32 +antialias ' + path;
 	exec(cmd, function(err, stdout, stderr) {
 		if (err) throw err;
 		console.log('cropped');
@@ -85,6 +85,20 @@ app.post('/upload', function (req, res) {
 		},
 		(req.param('delay', 'yes') == 'yes') ? 2000 : -1
 	);
+});
+
+app.get('/stat', function(req, res) {
+	fs.readdir('./public/img', function(err, files) {
+		var images = [];
+
+		for (var i = 0; i < files.length; i++) {
+			if (files[i].split('.').pop() === 'png') {
+				images.push(files[i]);
+			}
+		}		
+		
+		res.send(images);
+	});
 });
 
 app.listen(9999);

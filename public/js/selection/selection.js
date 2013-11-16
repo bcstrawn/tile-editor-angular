@@ -5,7 +5,7 @@ angular.module('Selection', ['Tiles'])
 	// should turn selecting off when leaving the module
 
 	$scope.SelectedTiles = SelectedTiles;
-	// $scope.tiles = Tiles.query();
+	// $scope.tiles = Tiles.tiles;
 	// $scope.selectedTiles = [[]];
 	// $scope.selectedTileIndices = {x: -1, y: -1};
 	$scope.selectingTiles = false;

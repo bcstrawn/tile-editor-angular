@@ -12,6 +12,7 @@
 			<button ng-click="addImage()" style="margin:20px">Add Image</button>
 			<button ng-click="saveMap()" style="margin:20px">Save Map</button>
 			<button ng-click="loadMap()" style="margin:20px">Load Map</button>
+			<button ng-click="stat()"> Stat</button>
 		</div>
 		<div id="left">
 			<tabs id="editPanes">
@@ -25,7 +26,8 @@
 									ng-mousedown="mouseDown($parent.$index, $index)" 
 									ng-mouseup="mouseUp($parent.$index, $index)" 
 									ng-mouseenter="mouseEnter($parent.$index, $index)"
-									ng-mouseleave="mouseLeave($parent.$index, $index)"></div>
+									ng-mouseleave="mouseLeave($parent.$index, $index)">
+								</div>
 							</div>	
 						</div>
 					</div>
@@ -52,7 +54,8 @@
 							ng-mousedown="tileDown($parent.$index, $index)" 
 							ng-mouseup="tileUp($parent.$index, $index)" 
 							ng-mouseenter="tileEnter($parent.$index, $index)" 
-							ng-mouseleave="tileLeave($parent.$index, $index)"></div>
+							ng-mouseleave="tileLeave($parent.$index, $index)">
+						</div>
 					</div>
 				</div>
 				<div id="border" ng-style="borderStyle" ng-mouseup="tileUp()"></div>
@@ -62,15 +65,15 @@
 					<div id="selectTiles" ng-controller="SelectionCtrl">
 						<div ng-repeat="row in SelectedTiles.tiles" class="tileRow">
 							<div ng-repeat="tile in row" class="tile">
-							<!-- <div ng-repeat="tile in SelectedTiles.tiles" class="tile"> -->
 								
-								<img ng-src="{{tile.img}}">
+								<img ng-src="{{tile.img}}" class="tileImage">
 								<img ng-src="{{tile.highlight}}" class="highlight">
 								<div class="trans" 
 									ng-mousedown="tileDown($parent.$index, $index)" 
 									ng-mouseup="tileUp($parent.$index, $index)" 
 									ng-mouseenter="tileEnter($parent.$index, $index)" 
-									ng-mouseleave="tileLeave($parent.$index, $index)"></div>
+									ng-mouseleave="tileLeave($parent.$index, $index)">
+								</div>
 							</div>
 						</div>
 					</div>

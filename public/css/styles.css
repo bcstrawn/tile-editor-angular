@@ -11,6 +11,11 @@
 	border: none;
 }
 
+.tileImage {
+	width: 32px;
+	height: 32px;
+}
+
 #minimap {
 	position: relative;
 	-webkit-touch-callout: none;

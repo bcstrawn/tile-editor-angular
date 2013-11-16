@@ -30,7 +30,32 @@ angular.module('tileEditor', ['angularFileUpload', 'ui.bootstrap', 'Editing', 'T
 		});
 	};
 
-	$scope.uploadSprite = function() {
+	$scope.stat = function() {
+		$http.get('/stat').success(function (stats) {
+			console.log(stats);
+		});
+	};
+
+	$scope.upload = function(file, fileName) {
+		$http.uploadFile({
+			url: '/upload', //upload.php script, node.js route, or servlet upload url)
+			// headers: {'optional', 'value'}
+			data: {fileName: fileName},
+			file: file
+		}).then(function(data, status, headers, config) {
+			// file is uploaded successfully
+			console.log(data);
+		});
+	};
+
+	$scope.uploadFile = function() {
+		var input = $('#myinput');
+		var file = input[0].files[0];
+
+		$scope.upload(file, $scope.fileName);
+	};
+
+	/*$scope.uploadSprite = function() {
 		var input = $('#spriteToUpload');
 		var file = input[0].files[0];
 		var reader = new FileReader();
@@ -67,7 +92,7 @@ angular.module('tileEditor', ['angularFileUpload', 'ui.bootstrap', 'Editing', 'T
 			});
 		},
 		'image/png');
-	};
+	};*/
 
 	/*$scope.imateInit = function() {
 		var canvas = document.getElementById("myCanvas");

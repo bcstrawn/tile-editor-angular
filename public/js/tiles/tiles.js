@@ -5,13 +5,11 @@ angular.module('Tiles', ['ngResource'])
 		tiles: [
 			[
 				{img: 'img/grass.png'},
-				{img: 'img/mountains.png'}
+				{img: 'img/mountains.png'},
+				{img: 'img/cave-20.png'},
+				{img: 'img/cave-21.png'}
 			]
-		],
-
-		query: function() {
-			return this.tiles;
-		}
+		]
 	};
 }])
 
