@@ -43,6 +43,12 @@ angular.module('tileEditor', ['angularFileUpload', 'ui.bootstrap', 'Editing', 'T
 		$http.get('/read');
 	};
 
+	$scope.tilesets = function() {
+		$http.get('/tilesets').success(function (tilesets) {
+			console.log(tilesets);
+		});
+	};
+
 	$scope.upload = function(file, fileName) {
 		$http.uploadFile({
 			url: '/upload', //upload.php script, node.js route, or servlet upload url)

@@ -14,6 +14,7 @@
 			<button ng-click="loadMap()" style="margin:20px">Load Map</button>
 			<button ng-click="read()" style="margin:20px">Read</button>
 			<button ng-click="stat()"> Stat</button>
+			<button ng-click="tilesets()"> Tilesets</button>
 		</div>
 		<div id="left">
 			<tabs id="editPanes">
@@ -33,6 +34,7 @@
 						</div>
 					</div>
 				</pane>
+
 				<pane heading="Tiles">
 					<div ng-controller="UploadCtrl">
 						<form>
@@ -40,6 +42,16 @@
 							<input type="file" id="myinput">
 							<button type="submit" ng-click="uploadFile()" ng-file-select="">Upload</button>
 						</form>
+					</div>
+				</pane>
+
+				<pane heading="Tilesets">
+					<div ng-controller="tilesetsCtrl">
+						<div ng-repeat="tileset in tilesets" class="tileset">
+							<img ng-src="{{tileset.img}}" style="width: 100px; height: auto">
+							<hr />
+							<h4>{{tileset.name}}</h4>
+						</div>
 					</div>
 				</pane>
 			</tabs>

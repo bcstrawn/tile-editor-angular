@@ -16,6 +16,13 @@
 	height: 32px;
 }
 
+.tileset {
+	border: 1px solid black;
+	margin: 20px;
+	padding: 15px;
+	display: inline-block;
+}
+
 #minimap {
 	position: relative;
 	-webkit-touch-callout: none;
@@ -76,6 +83,8 @@
 	height: 300px;
 	float: left;
 	border: 1px solid black;
+	resize: both;
+	overflow: auto;
 }
 
 #menubar {
@@ -85,7 +94,7 @@
 }
 
 #editPanes {
-	background-color: blue;
+	background-color: aliceblue;
 	border: 1px solid black;
 	height: 400px;
 	overflow: hidden;

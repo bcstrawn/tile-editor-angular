@@ -1,4 +1,17 @@
 angular.module('Tiles', ['ngResource'])
+.controller('tilesetsCtrl', ['$scope', '$http', function ($scope, $http) {
+	$scope.tilesets = [];
+
+	$scope.init = function() {
+		$http.get('/tilesets').success(function (tilesets) {
+			$scope.tilesets = tilesets;
+			console.log(tilesets);
+		});
+	};
+
+	$scope.init();
+}])
+
 .factory('Tiles', ['$http', function ($http) {
 	//return $resource('/tiles', {});
 	return {

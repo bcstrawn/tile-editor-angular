@@ -23,7 +23,9 @@ var tiles = [
 var world = null;
 
 app.get('/tiles', function(req, res) {
-	res.send(tiles);
+	getSprites('./public/img/cave', 'png', function (tiles) {
+		res.send(tiles);
+	});
 });
 
 app.post('/world', function(req, res) {
@@ -34,6 +36,46 @@ app.post('/world', function(req, res) {
 app.get('/world', function(req, res) {
 	res.send(world);
 });
+
+Array.prototype.forEach = function(callback){
+	for (var i = 0; i < this.length; i++) {
+		callback(this[i], i);
+	}
+};
+
+Array.prototype.select = function(callback, options){
+	var results = [];
+
+	for (var i = 0; i < this.length; i++) {
+		var result = callback(this[i], i);
+
+		if (result !== null && result !== undefined) {
+			if (!options || !options.unique || results.indexOf(result) === -1) {
+				results.push(result);
+			}
+		}
+	}
+
+	if (results.length === 0 && (!options || !options.returnEmpty)) {
+		results = null;
+	} else if (results.length === 1 && (!options || !options.forceArray)) {
+		results = results[0];
+	}
+
+	return results;
+};
+
+Array.prototype.where = function(callback){
+	var results = [];
+
+	for (var i = 0; i < this.length; i++) {
+		if (callback(this[i])) {
+			results.push(this[i]);
+		}
+	}
+
+	return results;
+};
 
 var splitImage = function(path) {
 	var cmd = 'convert ' + path + ' -crop 16x16 -filter Point -resize x32 +antialias ' + path;
@@ -79,6 +121,46 @@ var saveFile = function(req, callback) {
 	}
 };
 
+var getSprites = function(directory, type, callback) {
+	fs.readdir(directory, function(err, files) {
+		var images = files.select(function(file) {
+			return file.split('.').pop() === type;
+		});
+
+		var tiles = images.sort(function (a, b) {
+			var aNum = parseInt(a.split('-').pop().split('.')[0]);
+			var bNum = parseInt(b.split('-').pop().split('.')[0]);
+			return bNum - aNum;
+		});
+
+		var source = tiles.pop();
+		var folder = directory.split('/').pop();
+
+		tiles = tiles.reverse().select(function (tile) {
+			return {img: 'img/' + folder + '/' + tile};
+		});
+
+		fs.readFile(directory + '/' + source, function (err, data) {
+			if (err) throw err;
+			info = imageinfo(data);
+			/*console.log("Data is type:", info.mimeType);
+			console.log("  Size:", data.length, "bytes");*/
+			var tilesPerRow = info.width / 16;
+			var arrangedTiles = [];
+			tiles.forEach(function(tile, i) {
+				var row = Math.floor(i / tilesPerRow);
+				var column = i - row * tilesPerRow;
+				if (column === 0) {
+					arrangedTiles[row] = [];
+				}
+				arrangedTiles[row].push(tile);
+			});
+
+			callback(arrangedTiles);
+		});
+	});
+};
+
 var isNumber = function(n) {
   return !isNaN(parseFloat(n)) && isFinite(n);
 };
@@ -101,137 +183,49 @@ app.post('/upload', function (req, res) {
 	);
 });
 
-app.get('/stat', function (req, res) {
-	fs.readdir('./uploads', function(err, files) {
-		var images = [];
-
-		for (var i = 0; i < files.length; i++) {
-			if (files[i].split('.').pop() === 'png') {
-				images.push(files[i]);
+app.get('/tilesets', function (req, res) {
+	fs.readdir('./public/img', function (err, files) {
+		var folders = files.select(function (file) {
+			if (file.split('.').length === 1) {
+				return {
+					img: 'img/' + file + '/' + file + '.png',
+					name: file
+				};
 			}
-		}
-		
-		console.log(images.length);
+		});
 
-		var tiles = [];
-		for (var i = 0; i < images.length; i++) {
-			if (images[i])
-		}
 
-		/*fs.readFile('./uploads/cave.png', function (err, data) {
-			if (err) throw err;
-			info = imageinfo(data);
-			console.log("Data is type:", info.mimeType);
-			console.log("  Size:", data.length, "bytes");
-			var tilesPerRow = info.width / 16;
-			console.log("There are", tilesPerRow, "tiles per row");
-		});*/
 
-		/*
-		angular.module('Helpers', [])
+		/*var walk = function(dir, done) {
+			var results = [];
+			fs.readdir(dir, function(err, list) {
+				if (err) return done(err);
+				var pending = list.length;
+				if (!pending) return done(null, results);
+				list.forEach(function(file) {
+					file = dir + '/' + file;
+					fs.stat(file, function(err, stat) {
+						if (stat && stat.isDirectory()) {
+							walk(file, function(err, res) {
+							results = results.concat(res);
+							if (!--pending) done(null, results);
+							});
+						} else {
+							results.push(file);
+							if (!--pending) done(null, results);
+						}
+					});
+				});
+			});
+		};
+*/
+		res.send(folders);
+	});
+});
 
-		.factory('forEach', [function() {
-		    return {
-		        do: function(set, callback) {
-		            for (var i = 0; i < set.length; i++) {
-		                var item = set[i];
-		                callback(item);
-		            }
-		        },
-
-		        select: function(set, callback, options) {
-		            var processed = [];
-		            if (set === null || set === undefined) {
-		                return null;
-		            }
-
-		            for (var i = 0; i < set.length; i++) {
-		                var item = set[i];
-		                var result = callback(item, processed);
-		                if (result !== null && result !== undefined) {
-		                    if (options && options.unique === true) {
-		                        if (processed.indexOf(result) === -1) {
-		                            processed.push(result);
-		                        }
-		                    } else {
-		                        processed.push(result);
-		                    }
-		                }
-		            }
-
-		            if (processed.length === 0) {
-		                if (options && options.returnEmpty) {
-		                    return [];
-		                } else {
-		                    return null;
-		                }
-		            } else if (processed.length === 1) {
-		                if (options && options.forceArray) {
-		                    return processed;
-		                } else {
-		                    return processed[0];
-		                }
-		            } else {
-		                return processed;
-		            }
-		        },
-
-		        obj: {
-		            do: function(set, callback) {
-		                for (var field in set) {
-		                    if (set.hasOwnProperty(field)) {
-		                        var item = set[field];
-		                        callback(item);
-		                    }
-		                }
-		            },
-
-		            select: function(set, callback) {
-		                var processed = [];
-
-		                for (var field in set) {
-		                    if (set.hasOwnProperty(field)) {
-		                        var item = set[field];
-		                        processed.push(callback(item));
-		                    }
-		                }
-
-		                return processed;
-		            }
-		        }
-		    };
-		}])
-
-		.factory('sortFactory', [function() {
-		    return function(propertyNames) {
-		        if (propertyNames.length === 1) {
-		            var prop = propertyNames[0];
-
-		            return function(a, b) {
-		                if (typeof a[prop] === 'string') {
-		                    return (a[prop].localeCompare(b[prop]));
-		                } else {
-		                    return a[prop] - b[prop];
-		                }
-		            };
-		        } else if (propertyNames.length === 2) {
-		            var prop1 = propertyNames[0];
-		            var prop2 = propertyNames[1];
-
-		            return function(a, b) {
-		                if (a[prop1] != b[prop1]) {
-		                    return (a[prop1] - b[prop1]);
-		                } else {
-		                    return (a[prop2].localeCompare(b[prop2]));
-		                }
-		            };
-		        }
-		        return function(a, b) {
-		            return 1;
-		        };
-		    };
-		}]);
-		*/
+app.get('/stat', function (req, res) {
+	getSprites('./uploads', 'png', function (tiles) {
+		console.log(JSON.stringify(tiles, null, 2));
 	});
 });
 
@@ -245,6 +239,107 @@ app.get('/read', function (req, res) {
 		console.log("There are", tilesPerRow, "tiles per row");
 	});
 });
+
+
+/*var forEach = {
+	do: function(set, callback) {
+		for (var i = 0; i < set.length; i++) {
+			var item = set[i];
+			callback(item);
+		}
+	},
+
+	select: function(set, callback, options) {
+		var processed = [];
+		if (set === null || set === undefined) {
+			return null;
+		}
+
+		for (var i = 0; i < set.length; i++) {
+			var item = set[i];
+			var result = callback(item, processed);
+			if (result !== null && result !== undefined) {
+				if (options && options.unique === true) {
+					if (processed.indexOf(result) === -1) {
+						processed.push(result);
+					}
+				} else {
+					processed.push(result);
+				}
+			}
+		}
+
+		if (processed.length === 0) {
+			if (options && options.returnEmpty) {
+				return [];
+			} else {
+				return null;
+			}
+		} else if (processed.length === 1) {
+			if (options && options.forceArray) {
+				return processed;
+			} else {
+				return processed[0];
+			}
+		} else {
+			return processed;
+		}
+	},
+
+	obj: {
+		do: function(set, callback) {
+			for (var field in set) {
+				if (set.hasOwnProperty(field)) {
+					var item = set[field];
+					callback(item);
+				}
+			}
+		},
+
+		select: function(set, callback) {
+			var processed = [];
+
+			for (var field in set) {
+				if (set.hasOwnProperty(field)) {
+					var item = set[field];
+					processed.push(callback(item));
+				}
+			}
+
+			return processed;
+		}
+	}
+};*/
+
+/*var sortFactory = function(propertyNames) {
+	if (propertyNames.length === 1) {
+		var prop = propertyNames[0];
+
+		return function(a, b) {
+			if (typeof a[prop] === 'string') {
+				return (a[prop].localeCompare(b[prop]));
+			} else {
+				return a[prop] - b[prop];
+			}
+		};
+	} else if (propertyNames.length === 2) {
+		var prop1 = propertyNames[0];
+		var prop2 = propertyNames[1];
+
+		return function(a, b) {
+			if (a[prop1] != b[prop1]) {
+				return (a[prop1] - b[prop1]);
+			} else {
+				return (a[prop2].localeCompare(b[prop2]));
+			}
+		};
+	}
+	return function(a, b) {
+		return 1;
+	};
+};*/
+
+
 
 app.listen(9999);
 console.log('listening on port 9999...');
