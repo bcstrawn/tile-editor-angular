@@ -12,6 +12,7 @@
 			<button ng-click="addImage()" style="margin:20px">Add Image</button>
 			<button ng-click="saveMap()" style="margin:20px">Save Map</button>
 			<button ng-click="loadMap()" style="margin:20px">Load Map</button>
+			<button ng-click="read()" style="margin:20px">Read</button>
 			<button ng-click="stat()"> Stat</button>
 		</div>
 		<div id="left">
@@ -63,7 +64,7 @@
 			<tabs>
 				<pane heading="Tiles">
 					<div id="selectTiles" ng-controller="SelectionCtrl">
-						<div ng-repeat="row in SelectedTiles.tiles" class="tileRow">
+						<div ng-repeat="row in SelectedTiles.tileset.tiles" class="tileRow">
 							<div ng-repeat="tile in row" class="tile">
 								
 								<img ng-src="{{tile.img}}" class="tileImage">

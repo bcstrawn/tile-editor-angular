@@ -1,14 +1,17 @@
 angular.module('Tiles', ['ngResource'])
-.factory('Tiles', ['$http', function($http) {
-	// return $resource('/tiles'/);
+.factory('Tiles', ['$http', function ($http) {
+	//return $resource('/tiles', {});
 	return {
-		tiles: [
-			[
-				{img: 'img/grass.png'},
-				{img: 'img/mountains.png'},
-				{img: 'img/cave-20.png'},
-				{img: 'img/cave-21.png'}
-			]
+		tilesets: [
+			{
+				name: 'default',
+				tiles: [
+					{img: 'img/grass.png'},
+					{img: 'img/mountains.png'},
+					{img: 'img/cave-20.png'},
+					{img: 'img/cave-21.png'}
+				]
+			}
 		]
 	};
 }])

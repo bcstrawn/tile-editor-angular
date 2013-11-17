@@ -70,7 +70,7 @@ angular.module('Selection', ['Tiles'])
 	function(SelectionTiles) {
 
 	return {
-		tiles: SelectionTiles.currentTiles,
+		tileset: SelectionTiles.currentTileset,
 		selectedTiles: null,
 		startPointIndices: {x: -1, y: -1},
 		defaultHighlight: 'img/highlight.png',
@@ -78,9 +78,9 @@ angular.module('Selection', ['Tiles'])
 		setStartPoint: function(x, y) {
 			this.selectedTiles = [[]];
 			this.unHighlightTiles();
-			this.selectedTiles[0][0] = this.tiles[y][x];
+			this.selectedTiles[0][0] = this.tileset.tiles[y][x];
 			this.startPointIndices = {x: x, y: y};
-			this.tiles[y][x].highlight = this.defaultHighlight;
+			this.tileset.tiles[y][x].highlight = this.defaultHighlight;
 		},
 
 		setEndPoint: function(x, y) {
@@ -90,7 +90,7 @@ angular.module('Selection', ['Tiles'])
 			for (var i = startPoint.y; i <= endPoint.y; i++) {
 				this.selectedTiles[i-startPoint.y] = [];
 				for (var j = startPoint.x; j <= endPoint.x; j++) {
-					var currentTile = this.tiles[i][j];
+					var currentTile = this.tileset.tiles[i][j];
 					this.selectedTiles[i-startPoint.y][j-startPoint.x] = currentTile;
 					currentTile.highlight = this.defaultHighlight;
 				}
@@ -98,9 +98,9 @@ angular.module('Selection', ['Tiles'])
 		},
 
 		unHighlightTiles: function() {
-			for (var i = 0; i < this.tiles.length; i++) {
-				for (var j = 0; j < this.tiles[i].length; j++) {
-					this.tiles[i][j].highlight = 'img/trans.png';
+			for (var i = 0; i < this.tileset.tiles.length; i++) {
+				for (var j = 0; j < this.tileset.tiles[i].length; j++) {
+					this.tileset.tiles[i][j].highlight = 'img/trans.png';
 				}
 			}
 		}
@@ -109,6 +109,6 @@ angular.module('Selection', ['Tiles'])
 
 .factory('SelectionTiles', ['Tiles', function(Tiles) {
 	return {
-		currentTiles: Tiles.tiles
+		currentTileset: Tiles.tilesets[0]
 	};
 }]);

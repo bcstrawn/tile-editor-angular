@@ -1,16 +1,19 @@
 angular.module('tileEditor', ['angularFileUpload', 'ui.bootstrap', 'Editing', 'Tiles', 'Selection', 'World', 'Minimap', 'Upload'])
-.controller('EditorCtrl', ['$scope', 'Tiles', 'World', 'SelectionTiles', 'World', '$http',
-	function($scope, Tiles, World, SelectionTiles, World, $http) {
+.controller('EditorCtrl', ['$scope', '$http', 'Tiles', 'World', 'SelectionTiles', 'World',
+	function ($scope, $http, Tiles, World, SelectionTiles, World) {
 	$scope.world = World.query();
 
 	$scope.init = function() {
 		$scope.stopDrag();
+		$http.get('/tiles').success(function (tiles) {
+			console.log(tiles);
+			Tiles.tilesets[0].tiles = tiles;
+		});
 	};
 
 	$scope.stopDrag = function() {
-		// console.log('stopping');
-		$('img').live('mousedown', function(){return false});
-		$('.trans').live('mousedown', function(){return false});
+		$('img').live('mousedown', function() { return false; });
+		$('.trans').live('mousedown', function() { return false; });
 
 		console.log(SelectionTiles.currentTiles);
 	};
@@ -25,7 +28,7 @@ angular.module('tileEditor', ['angularFileUpload', 'ui.bootstrap', 'Editing', 'T
 	};
 
 	$scope.loadMap = function() {
-		$http.get('/world').success(function(world) {
+		$http.get('/world').success(function (world) {
 			World.setWorld(world);
 		});
 	};
@@ -36,13 +39,17 @@ angular.module('tileEditor', ['angularFileUpload', 'ui.bootstrap', 'Editing', 'T
 		});
 	};
 
+	$scope.read = function() {
+		$http.get('/read');
+	};
+
 	$scope.upload = function(file, fileName) {
 		$http.uploadFile({
 			url: '/upload', //upload.php script, node.js route, or servlet upload url)
 			// headers: {'optional', 'value'}
 			data: {fileName: fileName},
 			file: file
-		}).then(function(data, status, headers, config) {
+		}).then(function (data, status, headers, config) {
 			// file is uploaded successfully
 			console.log(data);
 		});
@@ -54,86 +61,6 @@ angular.module('tileEditor', ['angularFileUpload', 'ui.bootstrap', 'Editing', 'T
 
 		$scope.upload(file, $scope.fileName);
 	};
-
-	/*$scope.uploadSprite = function() {
-		var input = $('#spriteToUpload');
-		var file = input[0].files[0];
-		var reader = new FileReader();
-
-		reader.onload = function(e) {
-			var img = new Image();
-			img.src = e.target.result;
-			var canvas = document.createElement('canvas');
-			var context = canvas.getContext('2d');
-
-			canvas.width = 32;
-			canvas.height = 32;
-
-			context.drawImage(img, 0, 0, 32, 32, 0, 0, canvas.width, canvas.height);
-
-			$scope.uploadImageFromCanvas(canvas);
-		};
-
-		reader.readAsDataURL(file);
-	};
-
-	$scope.uploadImageFromCanvas = function(canvas) {
-		canvas.toBlob(function (blob) {
-			console.log(blob);
-			$http.uploadFile({
-				url: '/upload',
-				// headers: {'optional', 'value'}
-				data: {fileName: $scope.fileName},
-				file: blob
-			}).progress(function(evt) {
-				console.log('percent: ' + parseInt(100.0 * evt.loaded / evt.total));
-			}).then(function(data, status, headers, config) {
-				console.log(data);
-			});
-		},
-		'image/png');
-	};*/
-
-	/*$scope.imateInit = function() {
-		var canvas = document.getElementById("myCanvas");
-		var ctx = canvas.getContext("2d");
-		var imageObj = new Image();
-
-		imageObj.onload = function() {
-			ctx.drawImage(imageObj, 0, 0);
-			imageObj.src = "tilesetImageLocationHere";
-		};
-
-		var imageWidth = x;
-		var imageHeight = x;
-		var tileWidth = x;
-		var tileHeight = x;
-
-		var tilesX = imageWidth / tileWidth;
-		var tilesY = imageHeight / tileHeight;
-		var totalTiles = tilesX * tilesY;        
-		var tileData = new Array();
-
-		for(var i = 0; i < tilesY; i++) {
-			for(var j = 0; j < tilesX; j++) {
-				// Store the image data of each tile in the array.
-				tileData.push(ctx.getImageData(j*tileWidth, i*tileHeight, tileWidth, tileHeight);
-			}
-		}
-		//From here you should be able to draw your images back into a canvas like so:
-		ctx.putImageData(tileData[0], x, y);
-	};
-
-
-	var fd = new FormData();
-    //Take the first selected file
-    fd.append("file", files[0]);
-
-    $http.post(uploadUrl, fd, {
-        withCredentials: true,
-        headers: {'Content-Type': undefined },
-        transformRequest: angular.identity
-    }).success( ...all right!... ).error( ..damn!... );*/
 
 	$scope.init();
 }]);

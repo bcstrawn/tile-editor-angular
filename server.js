@@ -2,17 +2,21 @@ var express = require('express'),
 	app = express(),
 	fs = require('fs'),
 	path = require('path'),
-	exec = require('child_process').exec;
+	exec = require('child_process').exec,
+	imageinfo = require('imageinfo');
 
 app.configure(function() {
-    app.use(express.static(__dirname + '/public'));
-    app.use(express.bodyParser());
+	app.use(express.static(__dirname + '/public'));
+	app.use(express.bodyParser());
 });
 
 var tiles = [
 	[
 		{img: 'img/grass.png'},
-		{img: 'img/mountains.png'}
+		{img: 'img/mountains.png'},
+		{img: 'img/cave-20.png'},
+		{img: 'img/cave-21.png'},
+		{img: 'img/cave-22.png'}
 	]
 ];
 
@@ -34,7 +38,13 @@ app.get('/world', function(req, res) {
 var splitImage = function(path) {
 	var cmd = 'convert ' + path + ' -crop 16x16 -filter Point -resize x32 +antialias ' + path;
 	exec(cmd, function(err, stdout, stderr) {
-		if (err) throw err;
+		if (err) {
+			if (err.message.indexOf('Invalid Parameter') !== -1) {
+				throw 'Must install imagemagick';
+			}
+			//console.log(err.message);
+			//throw err;
+		}
 		console.log('cropped');
 	});
 };
@@ -69,14 +79,18 @@ var saveFile = function(req, callback) {
 	}
 };
 
+var isNumber = function(n) {
+  return !isNaN(parseFloat(n)) && isFinite(n);
+};
+
 app.post('/upload', function (req, res) {
 	setTimeout(
 		function () {
 			res.setHeader('Content-Type', 'text/html');
 			//console.log(req.files);
-			if (req.files.length == 0 || req.files.file.size == 0)
+			if (req.files.length === 0 || req.files.file.size === 0) {
 				res.send({ msg: 'No file uploaded at ' + new Date().toString() });
-			else {
+			} else {
 				var file = req.files.file;
 				saveFile(req, function() {
 					res.send({ msg: '<b>"' + file.name + '"</b> uploaded to the server at ' + new Date().toString() });
@@ -87,17 +101,42 @@ app.post('/upload', function (req, res) {
 	);
 });
 
-app.get('/stat', function(req, res) {
-	fs.readdir('./public/img', function(err, files) {
+app.get('/stat', function (req, res) {
+	fs.readdir('./uploads', function(err, files) {
 		var images = [];
 
 		for (var i = 0; i < files.length; i++) {
 			if (files[i].split('.').pop() === 'png') {
 				images.push(files[i]);
 			}
-		}		
+		}
 		
-		res.send(images);
+		console.log(images.length);
+
+		var tiles = [];
+		for (var i = 0; i < images.length; i++) {
+			if (images[i])
+		}
+
+		/*fs.readFile('./uploads/cave.png', function (err, data) {
+			if (err) throw err;
+			info = imageinfo(data);
+			console.log("Data is type:", info.mimeType);
+			console.log("  Size:", data.length, "bytes");
+			var tilesPerRow = info.width / 16;
+			console.log("There are", tilesPerRow, "tiles per row");
+		});*/
+	});
+});
+
+app.get('/read', function (req, res) {
+	fs.readFile('./uploads/cave.png', function (err, data) {
+		if (err) throw err;
+		info = imageinfo(data);
+		/*console.log("Data is type:", info.mimeType);
+		console.log("  Size:", data.length, "bytes");*/
+		var tilesPerRow = info.width / 16;
+		console.log("There are", tilesPerRow, "tiles per row");
 	});
 });
 
