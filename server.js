@@ -126,6 +126,112 @@ app.get('/stat', function (req, res) {
 			var tilesPerRow = info.width / 16;
 			console.log("There are", tilesPerRow, "tiles per row");
 		});*/
+
+		/*
+		angular.module('Helpers', [])
+
+		.factory('forEach', [function() {
+		    return {
+		        do: function(set, callback) {
+		            for (var i = 0; i < set.length; i++) {
+		                var item = set[i];
+		                callback(item);
+		            }
+		        },
+
+		        select: function(set, callback, options) {
+		            var processed = [];
+		            if (set === null || set === undefined) {
+		                return null;
+		            }
+
+		            for (var i = 0; i < set.length; i++) {
+		                var item = set[i];
+		                var result = callback(item, processed);
+		                if (result !== null && result !== undefined) {
+		                    if (options && options.unique === true) {
+		                        if (processed.indexOf(result) === -1) {
+		                            processed.push(result);
+		                        }
+		                    } else {
+		                        processed.push(result);
+		                    }
+		                }
+		            }
+
+		            if (processed.length === 0) {
+		                if (options && options.returnEmpty) {
+		                    return [];
+		                } else {
+		                    return null;
+		                }
+		            } else if (processed.length === 1) {
+		                if (options && options.forceArray) {
+		                    return processed;
+		                } else {
+		                    return processed[0];
+		                }
+		            } else {
+		                return processed;
+		            }
+		        },
+
+		        obj: {
+		            do: function(set, callback) {
+		                for (var field in set) {
+		                    if (set.hasOwnProperty(field)) {
+		                        var item = set[field];
+		                        callback(item);
+		                    }
+		                }
+		            },
+
+		            select: function(set, callback) {
+		                var processed = [];
+
+		                for (var field in set) {
+		                    if (set.hasOwnProperty(field)) {
+		                        var item = set[field];
+		                        processed.push(callback(item));
+		                    }
+		                }
+
+		                return processed;
+		            }
+		        }
+		    };
+		}])
+
+		.factory('sortFactory', [function() {
+		    return function(propertyNames) {
+		        if (propertyNames.length === 1) {
+		            var prop = propertyNames[0];
+
+		            return function(a, b) {
+		                if (typeof a[prop] === 'string') {
+		                    return (a[prop].localeCompare(b[prop]));
+		                } else {
+		                    return a[prop] - b[prop];
+		                }
+		            };
+		        } else if (propertyNames.length === 2) {
+		            var prop1 = propertyNames[0];
+		            var prop2 = propertyNames[1];
+
+		            return function(a, b) {
+		                if (a[prop1] != b[prop1]) {
+		                    return (a[prop1] - b[prop1]);
+		                } else {
+		                    return (a[prop2].localeCompare(b[prop2]));
+		                }
+		            };
+		        }
+		        return function(a, b) {
+		            return 1;
+		        };
+		    };
+		}]);
+		*/
 	});
 });
 
