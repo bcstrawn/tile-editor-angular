@@ -47,10 +47,10 @@
 
 				<pane heading="Tilesets">
 					<div ng-controller="tilesetsCtrl">
-						<div ng-repeat="tileset in tilesets" class="tileset">
+						<div ng-repeat="tileset in tilesets" ng-click="changeTileset($index)" class="tileset">
 							<img ng-src="{{tileset.img}}" style="width: 100px; height: auto">
 							<hr />
-							<h4>{{tileset.name}}</h4>
+							<h4>{{tileset.name}}</h4> <button ng-click="editTileset($index)">Edit</button>
 						</div>
 					</div>
 				</pane>
@@ -75,8 +75,8 @@
 			</div>
 			<tabs>
 				<pane heading="Tiles">
-					<div id="selectTiles" ng-controller="SelectionCtrl">
-						<div ng-repeat="row in SelectedTiles.tileset.tiles" class="tileRow">
+					<div id="selectTiles" ng-controller="SelectionCtrl" ng-mouseleave="moduleLeave()" ng-style="{width: getWidth()}">
+						<div ng-repeat="row in SelectedTiles.tileset.tiles" class="tileRow" ng-style="{width: row.length*33}">
 							<div ng-repeat="tile in row" class="tile">
 								
 								<img ng-src="{{tile.img}}" class="tileImage">

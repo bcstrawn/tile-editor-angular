@@ -1,12 +1,19 @@
 angular.module('Tiles', ['ngResource'])
-.controller('tilesetsCtrl', ['$scope', '$http', function ($scope, $http) {
+.controller('tilesetsCtrl', ['$scope', '$http', 'SelectedTiles', 'Tiles', function ($scope, $http, SelectedTiles, Tiles) {
 	$scope.tilesets = [];
 
 	$scope.init = function() {
 		$http.get('/tilesets').success(function (tilesets) {
+			Tiles.tilesets = tilesets;
 			$scope.tilesets = tilesets;
 			console.log(tilesets);
 		});
+	};
+
+	$scope.changeTileset = function(index) {
+		console.log('changing to index', index);
+		SelectedTiles.tileset = Tiles.tilesets[index];
+		console.log(SelectedTiles.tileset);
 	};
 
 	$scope.init();

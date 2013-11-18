@@ -23,6 +23,11 @@
 	display: inline-block;
 }
 
+.tileset:hover {
+	border: 2px solid green;
+	margin: 19px;
+}
+
 #minimap {
 	position: relative;
 	-webkit-touch-callout: none;

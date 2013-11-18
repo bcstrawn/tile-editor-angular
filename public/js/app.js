@@ -1,6 +1,6 @@
 angular.module('tileEditor', ['angularFileUpload', 'ui.bootstrap', 'Editing', 'Tiles', 'Selection', 'World', 'Minimap', 'Upload'])
-.controller('EditorCtrl', ['$scope', '$http', 'Tiles', 'World', 'SelectionTiles', 'World',
-	function ($scope, $http, Tiles, World, SelectionTiles, World) {
+.controller('EditorCtrl', ['$scope', '$http', 'Tiles', 'World',
+	function ($scope, $http, Tiles, World) {
 	$scope.world = World.query();
 
 	$scope.init = function() {
@@ -15,7 +15,7 @@ angular.module('tileEditor', ['angularFileUpload', 'ui.bootstrap', 'Editing', 'T
 		$('img').live('mousedown', function() { return false; });
 		$('.trans').live('mousedown', function() { return false; });
 
-		console.log(SelectionTiles.currentTiles);
+		//console.log(SelectionTiles.currentTiles);
 	};
 
 	$scope.addImage = function() {

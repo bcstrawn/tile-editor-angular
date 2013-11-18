@@ -10,38 +10,11 @@ app.configure(function() {
 	app.use(express.bodyParser());
 });
 
-var tiles = [
-	[
-		{img: 'img/grass.png'},
-		{img: 'img/mountains.png'},
-		{img: 'img/cave-20.png'},
-		{img: 'img/cave-21.png'},
-		{img: 'img/cave-22.png'}
-	]
-];
-
-var world = null;
-
-app.get('/tiles', function(req, res) {
-	getSprites('./public/img/cave', 'png', function (tiles) {
-		res.send(tiles);
-	});
-});
-
-app.post('/world', function(req, res) {
-	world = req.body;
-	res.send('success');
-});
-
-app.get('/world', function(req, res) {
-	res.send(world);
-});
-
-Array.prototype.forEach = function(callback){
+/*Array.prototype.forEach = function(callback){
 	for (var i = 0; i < this.length; i++) {
-		callback(this[i], i);
+		callback(this[i]);
 	}
-};
+};*/
 
 Array.prototype.select = function(callback, options){
 	var results = [];
@@ -77,12 +50,29 @@ Array.prototype.where = function(callback){
 	return results;
 };
 
+
+var tiles = [
+	[
+		{img: 'img/grass.png'},
+		{img: 'img/mountains.png'},
+		{img: 'img/cave-20.png'},
+		{img: 'img/cave-21.png'},
+		{img: 'img/cave-22.png'}
+	]
+];
+
+var world = null;
+
+
+
 var splitImage = function(path) {
 	var cmd = 'convert ' + path + ' -crop 16x16 -filter Point -resize x32 +antialias ' + path;
 	exec(cmd, function(err, stdout, stderr) {
 		if (err) {
 			if (err.message.indexOf('Invalid Parameter') !== -1) {
 				throw 'Must install imagemagick';
+			} else {
+				throw err;
 			}
 			//console.log(err.message);
 			//throw err;
@@ -93,13 +83,36 @@ var splitImage = function(path) {
 
 var getRelativePath = function(path) {
 	var pieces = path.split('\\');
-	var relativePath = pieces[pieces.length-2] + '\\' + pieces[pieces.length-1];
+	var index = pieces.indexOf('public');
+	var relativePath = pieces.slice(index).join('\\');
+	//var relativePath = pieces[pieces.length-2] + '\\' + pieces[pieces.length-1];
 	return relativePath;
 };
 
+var tryMakeFolder = function(folderPath) {
+	fs.stat(folderPath, function(err, stats) {
+		var exists = false;
+
+		if (err && err.code !== 'ENOENT') {
+			throw err;
+		} else if (stats && stats.isDirectory()) {
+			exists = true;
+		}
+
+		if (!exists) {
+			fs.mkdir(targetFolder, function(err) {
+				if (err) throw err;
+			});
+		}
+	});
+};
+
 var saveFile = function(req, callback) {
+	var targetFolder = path.resolve('./public/img/' + req.body.fileName);
+	tryMakeFolder(targetFolder);
+
 	var tempPath = req.files.file.path,
-		targetPath = path.resolve('./uploads/' + req.body.fileName + '.png');
+		targetPath = targetFolder + '\\' + req.body.fileName + '.png';
 
 	// if (path.extname(req.files.file.name).toLowerCase() === '.png') {
 	//console.log(req.files.file)
@@ -123,9 +136,13 @@ var saveFile = function(req, callback) {
 
 var getSprites = function(directory, type, callback) {
 	fs.readdir(directory, function(err, files) {
-		var images = files.select(function(file) {
+		if (err) throw err;
+
+		var images = files.where(function(file) {
 			return file.split('.').pop() === type;
 		});
+
+		//console.log(JSON.stringify(images, null, 2));
 
 		var tiles = images.sort(function (a, b) {
 			var aNum = parseInt(a.split('-').pop().split('.')[0]);
@@ -139,6 +156,10 @@ var getSprites = function(directory, type, callback) {
 		tiles = tiles.reverse().select(function (tile) {
 			return {img: 'img/' + folder + '/' + tile};
 		});
+
+		if (!source || !tiles || tiles.length === 0) {
+			return callback([]);
+		}
 
 		fs.readFile(directory + '/' + source, function (err, data) {
 			if (err) throw err;
@@ -165,26 +186,38 @@ var isNumber = function(n) {
   return !isNaN(parseFloat(n)) && isFinite(n);
 };
 
+app.get('/tiles', function(req, res) {
+	getSprites('./public/img/cave', 'png', function (tiles) {
+		res.send(tiles);
+	});
+});
+
+app.post('/world', function(req, res) {
+	world = req.body;
+	res.send('success');
+});
+
+app.get('/world', function(req, res) {
+	res.send(world);
+});
+
 app.post('/upload', function (req, res) {
-	setTimeout(
-		function () {
-			res.setHeader('Content-Type', 'text/html');
-			//console.log(req.files);
-			if (req.files.length === 0 || req.files.file.size === 0) {
-				res.send({ msg: 'No file uploaded at ' + new Date().toString() });
-			} else {
-				var file = req.files.file;
-				saveFile(req, function() {
-					res.send({ msg: '<b>"' + file.name + '"</b> uploaded to the server at ' + new Date().toString() });
-				});
-			}
-		},
-		(req.param('delay', 'yes') == 'yes') ? 2000 : -1
-	);
+	res.setHeader('Content-Type', 'text/html');
+
+	if (req.files.length === 0 || req.files.file.size === 0) {
+		res.send({ msg: 'No file uploaded at ' + new Date().toString() });
+	} else {
+		var file = req.files.file;
+		saveFile(req, function() {
+			res.send({ msg: '<b>"' + file.name + '"</b> uploaded to the server at ' + new Date().toString() });
+		});
+	}
 });
 
 app.get('/tilesets', function (req, res) {
 	fs.readdir('./public/img', function (err, files) {
+		if (err) throw err;
+
 		var folders = files.select(function (file) {
 			if (file.split('.').length === 1) {
 				return {
@@ -194,32 +227,15 @@ app.get('/tilesets', function (req, res) {
 			}
 		});
 
-
-
-		/*var walk = function(dir, done) {
-			var results = [];
-			fs.readdir(dir, function(err, list) {
-				if (err) return done(err);
-				var pending = list.length;
-				if (!pending) return done(null, results);
-				list.forEach(function(file) {
-					file = dir + '/' + file;
-					fs.stat(file, function(err, stat) {
-						if (stat && stat.isDirectory()) {
-							walk(file, function(err, res) {
-							results = results.concat(res);
-							if (!--pending) done(null, results);
-							});
-						} else {
-							results.push(file);
-							if (!--pending) done(null, results);
-						}
-					});
-				});
+		var pending = folders.length;
+		folders.forEach(function(folder) {
+			getSprites('./public/img/' + folder.name, 'png', function (tiles) {
+				folder.tiles = tiles;
+				if (!--pending) res.send(folders);
 			});
-		};
-*/
-		res.send(folders);
+		});
+
+		//res.send(folders);
 	});
 });
 
