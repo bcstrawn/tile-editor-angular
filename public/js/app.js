@@ -1,4 +1,13 @@
 angular.module('tileEditor', ['angularFileUpload', 'ui.bootstrap', 'Editing', 'Tiles', 'Selection', 'World', 'Minimap', 'Upload'])
+
+.config(['$routeProvider', function($routeProvider) {
+	$routeProvider.when('/map', {templateUrl:'js/map/map.html', controller:'EditingCtrl'});
+	$routeProvider.when('/tilesets', {templateUrl:'js/tilesets/tilesets.html', controller:'tilesetsCtrl'});
+	$routeProvider.when('/tilesets/:tilesetId', {templateUrl:'js/tilesets/tilesetsEdit.html', controller:'tilesetsCtrl'});
+	$routeProvider.when('/upload', {templateUrl:'js/upload/upload.html', controller:'UploadCtrl'});
+	$routeProvider.otherwise({redirectTo:'/map'});
+}])
+
 .controller('EditorCtrl', ['$scope', '$http', 'Tiles', 'World',
 	function ($scope, $http, Tiles, World) {
 	$scope.world = World.query();
@@ -70,3 +79,31 @@ angular.module('tileEditor', ['angularFileUpload', 'ui.bootstrap', 'Editing', 'T
 
 	$scope.init();
 }]);
+
+
+/*var module = angular.module('ContactBuckets', ['ContactDataModule']);
+
+module.config(['$routeProvider', function($routeProvider) {
+	$routeProvider.when('/contacts', {templateUrl:'contacts.html', controller:'ContactController'});
+	$routeProvider.when('/edit', {templateUrl:'edit-contact.html', controller:'EditContactController'});
+	$routeProvider.when('/edit/:id', {templateUrl:'edit-contact.html', controller:'EditContactController'});
+	$routeProvider.otherwise({redirectTo:'/contacts'});
+}]);
+
+module.controller('ContactController', ['$scope', 'ContactDataService', function($scope, contactDataService) {
+	$scope.contacts = contactDataService.getAll();
+	$scope.delete = contactDataService.delete;
+}]);
+
+module.controller('EditContactController', ['$scope', '$routeParams', 'ContactDataService', function($scope, $routeParams, contactDataService) {
+	if ($routeParams.id) {
+		$scope.contact = contactDataService.getOne(parseInt($routeParams.id));
+		console.log($scope.contact);
+	} else {
+		$scope.contact = {};
+	}
+
+	$scope.save = function() {
+		contactDataService.editOne($routeParams.id, $scope.contact);
+	}
+}]);*/

@@ -1,0 +1,7 @@
+<div ng-repeat="tileset in tilesets" ng-click="changeTileset($index)" class="tileset">
+	<a href="#/tilesets/{{tileset.name}}">
+		<img ng-src="{{tileset.img}}" style="width: 100px; height: auto">
+		<hr />
+		<h4>{{tileset.name}}</h4> <button ng-click="editTileset($index)">Edit</button>
+	</a>
+</div>

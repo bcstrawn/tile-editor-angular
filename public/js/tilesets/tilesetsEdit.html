@@ -1,0 +1,32 @@
+<h3>{{tileset.name}}</h3>
+
+<form class="pure-form" id="yui_3_11_0_1_1384880692452_2737">
+	<label class="pure-checkbox">
+	<input type="checkbox" value="">
+	Checkbox option 
+	</label>
+	<label class="pure-radio" id="yui_3_11_0_1_1384880692452_2760">
+	<input type="radio" checked="" value="option1" id="optionsRadios1" name="optionsRadios">
+	Radio button choice
+	</label>
+	<label class="pure-radio" id="yui_3_11_0_1_1384880692452_2736">
+	<input type="radio" value="option2" id="optionsRadios2" name="optionsRadios">
+	Radio other choice 
+	</label>
+</form>
+
+<div ng-controller="SelectionCtrl" ng-mouseleave="moduleLeave()" ng-style="{width: getWidth()}">
+	<div ng-repeat="row in SelectedTiles.tileset.tiles" class="tileRow" ng-style="{width: row.length*33}">
+		<div ng-repeat="tile in row" class="tile">
+			
+			<img ng-src="{{tile.img}}" class="tileImage">
+			<img ng-src="{{tile.highlight}}" class="highlight">
+			<div class="trans" 
+				ng-mousedown="tileDown($parent.$index, $index)" 
+				ng-mouseup="tileUp($parent.$index, $index)" 
+				ng-mouseenter="tileEnter($parent.$index, $index)" 
+				ng-mouseleave="tileLeave($parent.$index, $index)">
+			</div>
+		</div>
+	</div>
+</div>

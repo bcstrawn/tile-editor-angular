@@ -1,6 +1,11 @@
 angular.module('Tiles', ['ngResource'])
-.controller('tilesetsCtrl', ['$scope', '$http', 'SelectedTiles', 'Tiles', function ($scope, $http, SelectedTiles, Tiles) {
+.controller('tilesetsCtrl', ['$scope', '$http', 'SelectedTiles', 'Tiles', '$routeParams',
+	function ($scope, $http, SelectedTiles, Tiles, $routeParams) {
+
 	$scope.tilesets = [];
+	if ($routeParams.tilesetId) {
+		$scope.tileset = Tiles.tilesets[$routeParams.tilesetId];
+	}
 
 	$scope.init = function() {
 		$http.get('/tilesets').success(function (tilesets) {

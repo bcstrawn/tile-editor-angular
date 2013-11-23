@@ -19,8 +19,6 @@ angular.module('Editing', ['ui.bootstrap', 'World', 'Selection', 'Tiles'])
 
 	$scope.mouseDown = function(y, x) {
 		$scope.dragging = true;
-		// console.log('setting the tile at ' + x + ', ' + y);
-		// console.log(SelectedTiles.selectedTiles);
 		$scope.setTiles(x, y);
 	};
 
@@ -31,7 +29,7 @@ angular.module('Editing', ['ui.bootstrap', 'World', 'Selection', 'Tiles'])
 	};
 
 	$scope.mouseLeave = function(y, x) {
-		//console.log("left");
+
 	};
 
 	$scope.setTiles = function(x, y) {
