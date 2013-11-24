@@ -1,8 +1,29 @@
+body {
+	padding: 20px;
+}
+
 .tile {
 	display: inline-block;
 	border-bottom: 1px solid black;
 	border-right: 1px solid black;
 	position: relative;
+}
+
+.trans {
+	position: absolute;
+	top: 0;
+	left: 0;
+	height: 32px;
+	width: 32px;
+}
+
+.highlight {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	height: 32px;
+	width: 32px;
+	opacity: 0.4;
 }
 
 .minimapTile {
@@ -28,15 +49,12 @@
 	margin: 19px;
 }
 
+.nav {
+	margin-bottom: 20px;
+}
+
 #minimap {
-	position: relative;
-	-webkit-touch-callout: none;
-	-webkit-user-select: none;
-	-khtml-user-select: none;
-	-moz-user-select: none;
-	-ms-user-select: none;
-	user-select: none;
-	cursor: default;
+	background: black;
 }
 
 #border {
@@ -45,14 +63,6 @@
 	position: absolute;
 	border: 1px solid black;
 	pointer-events: none;
-}
-
-.trans {
-	position: absolute;
-	top: 0;
-	left: 0;
-	height: 32px;
-	width: 32px;
 }
 
 .tileRow {
@@ -76,26 +86,10 @@
 	overflow: hidden;
 }
 
-#left {
-	width: 550;
-	margin-right: 25px;
-	float: left;
-	border: 1px solid black;
-}
-
-#right {
-	width: 175px;
-	height: 300px;
-	float: left;
-	border: 1px solid black;
-	resize: both;
-	overflow: auto;
-}
-
-#menubar {
+#menu {
+	padding: 10px;
 	margin-bottom: 25px;
 	border: 1px solid black;
-	height: 100px;
 }
 
 #editPanes {
@@ -110,15 +104,6 @@
 	border: 1px solid black;
 }
 
-.highlight {
-	position: absolute;
-	top: 0px;
-	left: 0px;
-	height: 32px;
-	width: 32px;
-	opacity: 0.4;
-}
-
 #selectTiles {
 	user-select: none;
 	-o-user-select: none;
@@ -130,8 +115,6 @@
 }
 
 
-
-
-.nav {
-	margin-bottom: 0px;
+.pure-skin-mine .pure-button-small {
+    font-size: 85%;
 }

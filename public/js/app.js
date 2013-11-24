@@ -8,9 +8,47 @@ angular.module('tileEditor', ['angularFileUpload', 'ui.bootstrap', 'Editing', 'T
 	$routeProvider.otherwise({redirectTo:'/map'});
 }])
 
-.controller('EditorCtrl', ['$scope', '$http', 'Tiles', 'World',
-	function ($scope, $http, Tiles, World) {
+.controller('EditorCtrl', ['$scope', '$http', 'Tiles', 'World', '$location', '$window',
+	function ($scope, $http, Tiles, World, $location, $window) {
 	$scope.world = World.query();
+	$scope.tileSize = 32;
+	$scope.numTilesWide = $scope.world[0].length;
+	$scope.numTilesTall = $scope.world.length;
+	$scope.worldWidth = $scope.numTilesWide * $scope.tileSize;
+	$scope.worldHeight = $scope.numTilesTall * $scope.tileSize;
+	$scope.minimapWidth = $('#minimapContainer').width();
+	$scope.minimapHeight = $('#minimapContainer').height();
+	$scope.minimapTileSize = Math.floor($scope.minimapWidth / $scope.numTilesWide); // has to be square, with sidebars
+	$scope.viewportWidth = $('#viewportContainer').width();
+	$scope.viewportHeight = $('#viewportContainer').height();
+	$scope.tilesInViewWidth = Math.floor($scope.viewportWidth / $scope.tileSize);
+	$scope.tilesInViewHeight = Math.floor($scope.viewportHeight / $scope.tileSize);
+	$scope.viewportOutlineWidth = $scope.tilesInViewWidth * $scope.minimapTileSize;
+	$scope.viewportOutlineHeight = $scope.tilesInViewHeight * $scope.minimapTileSize;
+
+
+	var w = angular.element($window);
+    $scope.getHeight = function() {
+        return w.height();
+    };
+    $scope.$watch($scope.getHeight, function(newValue, oldValue) {
+        $scope.windowHeight = newValue;
+    });
+
+    w.bind('resize', function () {
+        $scope.$apply();
+    });
+
+
+	$scope.routes = [
+		{location: '/map', name: 'Map'},
+		{location: '/tilesets', name: 'Tilesets'},
+		{location: '/upload', name: 'Upload'}
+	];
+
+	$scope.getSelected = function(route) {
+		return {'pure-menu-selected': route.location === $location.path()};
+	};
 
 	$scope.init = function() {
 		$scope.stopDrag();
@@ -43,13 +81,19 @@ angular.module('tileEditor', ['angularFileUpload', 'ui.bootstrap', 'Editing', 'T
 	};
 
 	$scope.stat = function() {
-		$http.get('/stat').success(function (stats) {
-			console.log(stats);
-		});
+		console.log($location.path());
 	};
 
 	$scope.read = function() {
-		$http.get('/read');
+		console.log($('#minimap').width(),
+		$('#minimap').height(),
+		$('#viewportContainer').width(),
+		$('#viewportContainer').height());
+
+		console.log($scope.minimapWidth = $('#minimapContainer').width(),
+		$scope.minimapHeight = $('#minimapContainer').height(),
+		$scope.viewportWidth = $('#viewportContainer').width(),
+		$scope.viewportHeight = $('#viewportContainer').height());
 	};
 
 	$scope.tilesets = function() {
@@ -107,3 +151,22 @@ module.controller('EditContactController', ['$scope', '$routeParams', 'ContactDa
 		contactDataService.editOne($routeParams.id, $scope.contact);
 	}
 }]);*/
+
+/*
+var w = angular.element($window);
+    $scope.getHeight = function() {
+        return w.height();
+    };
+    $scope.$watch($scope.getHeight, function(newValue, oldValue) {
+        $scope.windowHeight = newValue;
+        $scope.style = function() {
+            return {
+                height: newValue + 'px'
+            };
+        };
+    });
+
+    w.bind('resize', function () {
+        $scope.$apply();
+    });
+*/

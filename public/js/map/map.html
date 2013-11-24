@@ -1,51 +1,52 @@
-<div id="left">
-	<div id="editWorld" ng-controller="EditingCtrl">
-		<div ng-repeat="row in World.query()" class="tileRow" ng-style="rowStyle">
-			<div ng-repeat="tile in row" class="tile">
-				<img ng-src="{{tile.img}}">
-				<img ng-src="{{tile.highlight}}" class="highlight">
-				<div class="trans"
-					ng-mousedown="mouseDown($parent.$index, $index)" 
-					ng-mouseup="mouseUp($parent.$index, $index)" 
-					ng-mouseenter="mouseEnter($parent.$index, $index)"
-					ng-mouseleave="mouseLeave($parent.$index, $index)">
-				</div>
-			</div>	
-		</div>
-	</div>
-</div>
-
-<div id="right">
-	<div id="minimap" ng-controller="minimapCtrl">
-		<div ng-repeat="row in World.query()" class="tileRow" ng-style="rowStyle">
-			<div ng-repeat="tile in row" class="tile minimapTile">
-				
-				<img ng-src="{{tile.img}}" class="minimapTile">
-				<img ng-src="{{tile.highlight}}" class="highlight minimapTile">
-				<div class="trans minimapTile" 
-					ng-mousedown="tileDown($parent.$index, $index)" 
-					ng-mouseup="tileUp($parent.$index, $index)" 
-					ng-mouseenter="tileEnter($parent.$index, $index)" 
-					ng-mouseleave="tileLeave($parent.$index, $index)">
-				</div>
+<div class="pure-g">
+	<div class="pure-u-1-2" id="viewportContainer">
+		<div id="editWorld" ng-controller="EditingCtrl">
+			<div ng-repeat="row in World.query()" class="tileRow" ng-style="rowStyle">
+				<div ng-repeat="tile in row" class="tile">
+					<img ng-src="{{tile.img}}">
+					<img ng-src="{{tile.highlight}}" class="highlight">
+					<div class="trans"
+						ng-mousedown="mouseDown($parent.$index, $index)" 
+						ng-mouseup="mouseUp($parent.$index, $index)" 
+						ng-mouseenter="mouseEnter($parent.$index, $index)"
+						ng-mouseleave="mouseLeave($parent.$index, $index)">
+					</div>
+				</div>	
 			</div>
 		</div>
-		<div id="border" ng-style="borderStyle" ng-mouseup="tileUp()"></div>
 	</div>
 
-	<hr />
+	<div class="pure-u-1-2">
+		<div id="minimap" ng-controller="minimapCtrl" ng-style="minimapStyle">
+			<div ng-repeat="row in World.query()" class="tileRow" ng-style="rowStyle">
+				<div ng-repeat="tile in row" class="tile minimapTile">
+					<img ng-src="{{tile.img}}" class="minimapTile">
+					<img ng-src="{{tile.highlight}}" class="highlight minimapTile">
+					<div class="trans minimapTile" 
+						ng-mousedown="tileDown($parent.$index, $index)" 
+						ng-mouseup="tileUp($parent.$index, $index)" 
+						ng-mouseenter="tileEnter($parent.$index, $index)" 
+						ng-mouseleave="tileLeave($parent.$index, $index)">
+					</div>
+				</div>
+			</div>
+			<div id="border" ng-style="borderStyle" ng-mouseup="tileUp()"></div>
+		</div>
 
-	<div id="selectTiles" ng-controller="SelectionCtrl" ng-mouseleave="moduleLeave()" ng-style="{width: getWidth()}">
-		<div ng-repeat="row in SelectedTiles.tileset.tiles" class="tileRow" ng-style="{width: row.length*33}">
-			<div ng-repeat="tile in row" class="tile">
-				
-				<img ng-src="{{tile.img}}" class="tileImage">
-				<img ng-src="{{tile.highlight}}" class="highlight">
-				<div class="trans" 
-					ng-mousedown="tileDown($parent.$index, $index)" 
-					ng-mouseup="tileUp($parent.$index, $index)" 
-					ng-mouseenter="tileEnter($parent.$index, $index)" 
-					ng-mouseleave="tileLeave($parent.$index, $index)">
+		<hr />
+
+		<div id="selectTiles" ng-controller="SelectionCtrl" ng-mouseleave="moduleLeave()" ng-style="{width: getWidth()}">
+			<div ng-repeat="row in SelectedTiles.tileset.tiles" class="tileRow" ng-style="{width: row.length*33}">
+				<div ng-repeat="tile in row" class="tile">
+					
+					<img ng-src="{{tile.img}}" class="tileImage">
+					<img ng-src="{{tile.highlight}}" class="highlight">
+					<div class="trans" 
+						ng-mousedown="tileDown($parent.$index, $index)" 
+						ng-mouseup="tileUp($parent.$index, $index)" 
+						ng-mouseenter="tileEnter($parent.$index, $index)" 
+						ng-mouseleave="tileLeave($parent.$index, $index)">
+					</div>
 				</div>
 			</div>
 		</div>

@@ -6,6 +6,9 @@ angular.module('Minimap', ['World'])
 	$scope.rowStyle = {
 		width: $scope.world[0].length*8
 	};
+	$scope.minimapStyle = {
+		position: 'relative'
+	};
 
 	$('#minimap').onselectstart = function () { return false; };
 

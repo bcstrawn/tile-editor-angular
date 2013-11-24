@@ -1,32 +1,30 @@
 <html lang="en" ng-app="tileEditor">
 <head>
 	<title></title>
-	<link rel="stylesheet" href="css/pure.min.css" />
-	<link rel="stylesheet" href="css/pure-skin.css" />
-	<link rel="stylesheet" href="css/styles.css" />
+	<link rel="stylesheet" type="text/css" href="css/pure.min.css">
+	<link rel="stylesheet" type="text/css" href="css/pure-skin.css">
+	<link rel="stylesheet" type="text/css" href="css/styles.css">
 </head>
-<body>
-	<div id="editor" ng-controller="EditorCtrl" class="pure-skin-mine">
-		<div id="menubar">
-			<button ng-click="stopDrag()" style="margin:20px">Stop Drag</button>
-			<button ng-click="addImage()" style="margin:20px">Add Image</button>
-			<button ng-click="saveMap()" style="margin:20px">Save Map</button>
-			<button ng-click="loadMap()" style="margin:20px">Load Map</button>
-			<button ng-click="read()" style="margin:20px">Read</button>
-			<button ng-click="stat()"> Stat</button>
-			<button ng-click="tilesets()"> Tilesets</button>
-		</div>
+<body ng-controller="EditorCtrl" class="pure-skin-mine">
+	<div id="menu">
+		<button ng-click="stopDrag()" class="pure-button pure-button-small">Stop Drag</button>
+		<button ng-click="addImage()" class="pure-button pure-button-small">Add Image</button>
+		<button ng-click="saveMap()" class="pure-button pure-button-small">Save Map</button>
+		<button ng-click="loadMap()" class="pure-button pure-button-small">Load Map</button>
+		<button ng-click="read()" class="pure-button pure-button-small">Read</button>
+		<button ng-click="stat()" class="pure-button pure-button-small">Stat</button>
+		<button ng-click="tilesets()" class="pure-button pure-button-small">Tilesets</button>
 
-		<div class="pure-menu pure-menu-open pure-menu-horizontal">
-			<ul>
-				<li class="pure-menu-selected"><a href="#/map">Map</a></li>
-				<li><a href="#/tilesets">Tilesets</a></li>
-				<li><a href="#/upload">Upload</a></li>
-			</ul>
-		</div>
-
-		<div ng-view></div>
+		<p>window.height: {{windowHeight}}</p>
 	</div>
+
+	<div class="nav pure-menu pure-menu-open pure-menu-horizontal">
+		<ul>
+			<li ng-repeat="route in routes" ng-class="getSelected(route)"><a href="#{{route.location}}">{{route.name}}</a></li>
+		</ul>
+	</div>
+
+	<div ng-view></div>
 
 	<script src="lib/jquery.js"></script>
 	<script src="lib/angular.js"></script>
