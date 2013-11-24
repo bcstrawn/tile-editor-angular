@@ -66,9 +66,8 @@ body {
 }
 
 .tileRow {
-	/*clear: both;
-	width: auto;*/
 	display: block;
+	margin: auto;
 }
 
 #editor {

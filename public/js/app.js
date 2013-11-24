@@ -27,17 +27,21 @@ angular.module('tileEditor', ['angularFileUpload', 'ui.bootstrap', 'Editing', 'T
 	$scope.viewportOutlineHeight = $scope.tilesInViewHeight * $scope.minimapTileSize;
 
 
-	var w = angular.element($window);
-    $scope.getHeight = function() {
-        return w.height();
-    };
-    $scope.$watch($scope.getHeight, function(newValue, oldValue) {
-        $scope.windowHeight = newValue;
-    });
+	$scope.window = angular.element($window);
+	$scope.getWindowDimensions = function () {
+		return { 'h': $scope.window.height(), 'w': $scope.window.width() };
+	};
+	$scope.$watch($scope.getWindowDimensions, function (newValue, oldValue) {
+		$scope.minimapWidth = $('#minimap').width();
+		$scope.minimapHeight = $('#minimap').height();
+		$scope.viewportWidth = $('#editWorld').width();
+		$scope.viewportHeight = $('#editWorld').height();
 
-    w.bind('resize', function () {
-        $scope.$apply();
-    });
+		//$scope.read();
+	}, true);
+	$scope.window.bind('resize', function () {
+		$scope.$apply();
+	});
 
 
 	$scope.routes = [
@@ -85,15 +89,11 @@ angular.module('tileEditor', ['angularFileUpload', 'ui.bootstrap', 'Editing', 'T
 	};
 
 	$scope.read = function() {
-		console.log($('#minimap').width(),
-		$('#minimap').height(),
-		$('#viewportContainer').width(),
-		$('#viewportContainer').height());
-
-		console.log($scope.minimapWidth = $('#minimapContainer').width(),
-		$scope.minimapHeight = $('#minimapContainer').height(),
-		$scope.viewportWidth = $('#viewportContainer').width(),
-		$scope.viewportHeight = $('#viewportContainer').height());
+		console.log(
+			$scope.minimapWidth,
+			$scope.minimapHeight,
+			$scope.viewportWidth,
+			$scope.viewportHeight);
 	};
 
 	$scope.tilesets = function() {
@@ -154,19 +154,19 @@ module.controller('EditContactController', ['$scope', '$routeParams', 'ContactDa
 
 /*
 var w = angular.element($window);
-    $scope.getHeight = function() {
-        return w.height();
-    };
-    $scope.$watch($scope.getHeight, function(newValue, oldValue) {
-        $scope.windowHeight = newValue;
-        $scope.style = function() {
-            return {
-                height: newValue + 'px'
-            };
-        };
-    });
+	$scope.getHeight = function() {
+		return w.height();
+	};
+	$scope.$watch($scope.getHeight, function(newValue, oldValue) {
+		$scope.windowHeight = newValue;
+		$scope.style = function() {
+			return {
+				height: newValue + 'px'
+			};
+		};
+	});
 
-    w.bind('resize', function () {
-        $scope.$apply();
-    });
+	w.bind('resize', function () {
+		$scope.$apply();
+	});
 */
