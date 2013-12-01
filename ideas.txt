@@ -1,0 +1,6 @@
+move blocks of tiles on the map
+premade blocks of tiles
+lock cursor movement in certain direction
+multiple selection of tilesets
+animation
+changing tiles during gameplay

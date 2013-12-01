@@ -1,5 +1,5 @@
-<div class="pure-g">
-	<div class="pure-u-1-2">
+<div id="map" ng-mouseleave="mapLeave()" ng-mousemove="mapMove($event)">
+	<div id="viewportBox">
 		<div id="editWorld" ng-controller="EditingCtrl">
 			<div ng-repeat="row in World.query()" class="tileRow" ng-style="rowStyle">
 				<div ng-repeat="tile in row" class="tile">
@@ -14,9 +14,13 @@
 				</div>	
 			</div>
 		</div>
-	</div>
+	</div
 
-	<div class="pure-u-1-2">
+	><div id="mover" ng-mousedown="moverDown($event)" ng-mouseup="moverUp()">
+		<div id="moverBar"></div>
+	</div
+
+	><div id="selectionBox">
 		<div class="pure-g-r">
 			<div class="pure-u-1-4"></div>
 			<div class="pure-u-1-2">

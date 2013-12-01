@@ -114,6 +114,41 @@ body {
 }
 
 
+
+#mover {
+	width: 14px;
+	height: 100%;
+	display: inline-block;
+}
+
+#moverBar {
+	margin: auto;
+	width: 6px;
+	height: 100%;
+	background:navy;
+	cursor:e-resize;
+}
+
+
+
+
+#map {
+
+}
+
+#viewportBox {
+	display: inline-block;
+	vertical-align: top;
+}
+
+#selectionBox {
+	display: inline-block;
+	vertical-align: top;
+	overflow: auto;
+}
+
+
+
 .pure-skin-mine .pure-button-small {
     font-size: 85%;
 }
