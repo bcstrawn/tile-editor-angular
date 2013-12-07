@@ -1,6 +1,8 @@
 move blocks of tiles on the map
 premade blocks of tiles
 lock cursor movement in certain direction
+make outline option for selection
+make tiles unselectable for selection
 multiple selection of tilesets
 animation
 changing tiles during gameplay

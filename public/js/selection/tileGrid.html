@@ -1,0 +1,27 @@
+<!-- <div ng-repeat="row in World.query()" class="tileRow" ng-style="rowStyle">
+	<div ng-repeat="tile in row" class="tile minimapTile">
+		<div grid-tile="tile" x="$index" y="$parent.$index"></div>
+		<img ng-src="{{tile.img}}" class="minimapTile">
+		<img ng-src="{{tile.highlight}}" class="highlight minimapTile">
+		<div class="trans minimapTile" 
+			ng-mousedown="tileDown($parent.$index, $index)" 
+			ng-mouseup="tileUp($parent.$index, $index)" 
+			ng-mouseenter="tileEnter($parent.$index, $index)" 
+			ng-mouseleave="tileLeave($parent.$index, $index)">
+		</div>
+	</div>
+</div>
+<div id="border" ng-style="borderStyle" ng-mouseup="tileUp()"></div> -->
+
+<div ng-repeat="row in tileGrid.tiles" class="tileRow" ng-style="tileGrid.rowStyle">
+	<div ng-repeat="tile in row" class="tile">
+		<img ng-src="{{tile.img}}">
+		<img ng-src="{{tile.highlight}}" class="highlight">
+		<div class="trans"
+			ng-mousedown="tileGrid.mouseDown($index, $parent.$index)" 
+			ng-mouseup="tileGrid.mouseUp($index, $parent.$index)" 
+			ng-mouseenter="tileGrid.mouseEnter($index, $parent.$index)"
+			ng-mouseleave="tileGrid.mouseLeave($index, $parent.$index)">
+		</div>
+	</div>	
+</div>

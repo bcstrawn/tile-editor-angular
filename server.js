@@ -51,7 +51,7 @@ Array.prototype.where = function(callback){
 };
 
 
-var tiles = [
+/*var tiles = [
 	[
 		{img: 'img/grass.png'},
 		{img: 'img/mountains.png'},
@@ -59,7 +59,7 @@ var tiles = [
 		{img: 'img/cave-21.png'},
 		{img: 'img/cave-22.png'}
 	]
-];
+];*/
 
 var world = null;
 
@@ -89,7 +89,7 @@ var getRelativePath = function(path) {
 	return relativePath;
 };
 
-var tryMakeFolder = function(folderPath) {
+var tryMakeFolder = function(folderPath, callback) {
 	fs.stat(folderPath, function(err, stats) {
 		var exists = false;
 
@@ -100,38 +100,41 @@ var tryMakeFolder = function(folderPath) {
 		}
 
 		if (!exists) {
-			fs.mkdir(targetFolder, function(err) {
+			fs.mkdir(folderPath, function(err) {
 				if (err) throw err;
+				callback();
 			});
+		} else {
+			callback();
 		}
 	});
 };
 
 var saveFile = function(req, callback) {
 	var targetFolder = path.resolve('./public/img/' + req.body.fileName);
-	tryMakeFolder(targetFolder);
+	tryMakeFolder(targetFolder, function() {
+		var tempPath = req.files.file.path,
+			targetPath = targetFolder + '\\' + req.body.fileName + '.png';
 
-	var tempPath = req.files.file.path,
-		targetPath = targetFolder + '\\' + req.body.fileName + '.png';
-
-	// if (path.extname(req.files.file.name).toLowerCase() === '.png') {
-	//console.log(req.files.file)
-	if (req.files.file.headers['content-type'] === 'image/png') {
-		fs.rename(tempPath, targetPath, function(err) {
-			if (err) throw err;
-			console.log("Upload completed!");
-			var relativePath = getRelativePath(targetPath);
-			console.log(relativePath);
-			splitImage(relativePath);
-			callback();
-		});
-	} else {
-		fs.unlink(tempPath, function (err) {
-			if (err) throw err;
-			console.error("Only .png files are allowed!");
-			callback();
-		});
-	}
+		// if (path.extname(req.files.file.name).toLowerCase() === '.png') {
+		//console.log(req.files.file)
+		if (req.files.file.headers['content-type'] === 'image/png') {
+			fs.rename(tempPath, targetPath, function(err) {
+				if (err) throw err;
+				console.log("Upload completed!");
+				var relativePath = getRelativePath(targetPath);
+				console.log(relativePath);
+				splitImage(relativePath);
+				callback();
+			});
+		} else {
+			fs.unlink(tempPath, function (err) {
+				if (err) throw err;
+				console.error("Only .png files are allowed!");
+				callback();
+			});
+		}
+	});
 };
 
 var getSprites = function(directory, type, callback) {
@@ -186,11 +189,11 @@ var isNumber = function(n) {
   return !isNaN(parseFloat(n)) && isFinite(n);
 };
 
-app.get('/tiles', function(req, res) {
+/*app.get('/tiles', function(req, res) {
 	getSprites('./public/img/cave', 'png', function (tiles) {
 		res.send(tiles);
 	});
-});
+});*/
 
 app.post('/world', function(req, res) {
 	world = req.body;

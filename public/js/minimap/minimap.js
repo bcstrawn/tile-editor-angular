@@ -1,6 +1,6 @@
 angular.module('Minimap', ['World'])
 .controller('minimapCtrl', ['$scope', 'World', function($scope, World) {
-	$scope.World = World;
+	/*$scope.World = World;
 	$scope.holding = false;
 	$scope.borderStyle = {top: 0, left: 0};
 	$scope.rowStyle = {
@@ -10,9 +10,9 @@ angular.module('Minimap', ['World'])
 		position: 'relative'
 	};
 
-	$('#minimap').onselectstart = function () { return false; };
+	$('#minimap').onselectstart = function () { return false; };*/
 
-	$scope.tileDown = function(y, x) {
+	/*$scope.tileDown = function(y, x) {
 		$scope.holding = true;
 		$scope.goTo(x, y);
 	};
@@ -62,5 +62,5 @@ angular.module('Minimap', ['World'])
 			top: yMinimap,
 			left: xMinimap
 		};
-	};
+	};*/
 }]);

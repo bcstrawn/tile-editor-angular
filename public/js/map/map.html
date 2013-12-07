@@ -1,7 +1,7 @@
 <div id="map" ng-mouseleave="mapLeave()" ng-mousemove="mapMove($event)">
 	<div id="viewportBox">
-		<div id="editWorld" ng-controller="EditingCtrl">
-			<div ng-repeat="row in World.query()" class="tileRow" ng-style="rowStyle">
+		<div id="editWorld">
+			<!-- <div ng-repeat="row in World.query()" class="tileRow" ng-style="rowStyle">
 				<div ng-repeat="tile in row" class="tile">
 					<img ng-src="{{tile.img}}">
 					<img ng-src="{{tile.highlight}}" class="highlight">
@@ -12,7 +12,8 @@
 						ng-mouseleave="mouseLeave($parent.$index, $index)">
 					</div>
 				</div>	
-			</div>
+			</div> -->
+			<div tile-grid="mapGrid"></div>
 		</div>
 	</div
 
@@ -24,8 +25,9 @@
 		<div class="pure-g-r">
 			<div class="pure-u-1-4"></div>
 			<div class="pure-u-1-2">
-				<div id="minimap" ng-controller="minimapCtrl" ng-style="minimapStyle" style="min-width: 275px">
-					<div ng-repeat="row in World.query()" class="tileRow" ng-style="rowStyle">
+				<!-- <div id="minimap" ng-controller="minimapCtrl" style="min-width: 275px; position: relative;"> -->
+				<div id="minimap" style="min-width: 275px; position: relative;">
+					<!-- <div ng-repeat="row in World.query()" class="tileRow" ng-style="rowStyle">
 						<div ng-repeat="tile in row" class="tile minimapTile">
 							<img ng-src="{{tile.img}}" class="minimapTile">
 							<img ng-src="{{tile.highlight}}" class="highlight minimapTile">
@@ -36,8 +38,9 @@
 								ng-mouseleave="tileLeave($parent.$index, $index)">
 							</div>
 						</div>
-					</div>
-					<div id="border" ng-style="borderStyle" ng-mouseup="tileUp()"></div>
+					</div> -->
+					<div tile-grid="minimapGrid"></div>
+					<div id="border" ng-style="minimapGrid.borderStyle" ng-mouseup="tileUp()"></div>
 				</div>
 			</div>
 			<div class="pure-u-1-4"></div>
@@ -45,8 +48,9 @@
 
 		<hr />
 
-		<div id="selectTiles" ng-controller="SelectionCtrl" ng-mouseleave="moduleLeave()" ng-style="{width: getWidth()}">
-			<div ng-repeat="row in SelectedTiles.tileset.tiles" class="tileRow" ng-style="{width: row.length*33}">
+		<!-- <div id="selectTiles" ng-controller="SelectionCtrl" ng-style="{width: getWidth()}"> -->
+		<div id="selectTiles" ng-style="{width: getWidth()}">
+			<!-- <div ng-repeat="row in SelectedTiles.tileset.tiles" class="tileRow" ng-style="{width: row.length*33}">
 				<div ng-repeat="tile in row" class="tile">
 					
 					<img ng-src="{{tile.img}}" class="tileImage">
@@ -58,7 +62,8 @@
 						ng-mouseleave="tileLeave($parent.$index, $index)">
 					</div>
 				</div>
-			</div>
+			</div> -->
+			<div tile-grid="selectionGrid"></div>
 		</div>
 	</div>
 </div>

@@ -1,5 +1,5 @@
 angular.module('Selection', ['Tiles'])
-.controller('SelectionCtrl', ['$scope', 'Tiles', 'SelectedTiles',
+/*.controller('SelectionCtrl', ['$scope', 'Tiles', 'SelectedTiles',
 	function($scope, Tiles, SelectedTiles) {
 
 	// should turn selecting off when leaving the module
@@ -7,9 +7,7 @@ angular.module('Selection', ['Tiles'])
 	$scope.SelectedTiles = SelectedTiles;
 	$scope.selectingTiles = false;
 
-	$scope.getWidth = function() {
-		return SelectedTiles.tileset.tiles[0].length * 33;
-	};
+	
 
 	$scope.tileDown = function(y, x) {
 		$scope.selectingTiles = true;
@@ -30,10 +28,6 @@ angular.module('Selection', ['Tiles'])
 
 	};
 
-	$scope.moduleLeave = function() {
-		$scope.selectingTiles = false;
-	};
-
 	$scope.unHighlightTiles = function() {
 		SelectedTiles.unHighlightTiles();
 	};
@@ -45,13 +39,17 @@ angular.module('Selection', ['Tiles'])
 	$scope.setSelectionEndPoint = function(x, y) {
 		SelectedTiles.setEndPoint(x, y);
 	};
-}])
+
+	$scope.moduleLeave = function() {
+		$scope.selectingTiles = false;
+	};
+}])*/
 
 .factory('SelectedTiles', ['Tiles', function(Tiles) {
 	return {
 		tileset: Tiles.tilesets[0],
 		selectedTiles: null,
-		startPointIndices: {x: -1, y: -1},
+		/*startPointIndices: {x: -1, y: -1},
 		defaultHighlight: 'img/highlight.png',
 
 		setStartPoint: function(x, y) {
@@ -86,6 +84,25 @@ angular.module('Selection', ['Tiles'])
 
 		highlightTile: function(tile) {
 			tile.highlight = this.defaultHighlight;
+		}*/
+	};
+}])
+
+.directive('tileGrid', function() {
+	return {
+		restrict: 'E',
+		templateUrl: 'tileGrid.html',
+		// pass these two names from attrs into the template scope
+		scope: {
+			tileGrid: '='
+		},
+		controller: function($scope) {
+			
+		},
+		link: function($scope, elem, attrs) {
+			elem.bind('mouseleave', function() {
+				$scope.tileGrid.moduleLeave();
+			});
 		}
 	};
-}]);
+});
