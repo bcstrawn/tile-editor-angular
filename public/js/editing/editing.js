@@ -1,6 +1,6 @@
 angular.module('Editing', ['ui.bootstrap', 'World', 'Selection', 'Tiles'])
-.controller('EditingCtrl', ['$scope', 'World', 'SelectedTiles', 'TileFactory',
-	function($scope, World, SelectedTiles, TileFactory) {
+.controller('EditingCtrl', ['$scope', 'World', 'SelectedTiles', 'TileFactory', '$http',
+	function($scope, World, SelectedTiles, TileFactory, $http) {
 
 	$scope.World = World;
 	$scope.dragging = false;
@@ -13,23 +13,37 @@ angular.module('Editing', ['ui.bootstrap', 'World', 'Selection', 'Tiles'])
 		var mapWidth = $('#map').width();
 		$('#viewportBox').width(mapWidth / 2 - 8);
 		$('#selectionBox').width(mapWidth / 2 - 8);
+
+		var map = TileFactory.generateBlankMap(15, 20, 'grass');
+		$scope.mapGrid.setTiles(map);
+		$scope.minimapGrid.setTiles(map);
+
+		$http.get('/tiles').success(function (tiles) {
+			console.log(tiles);
+			$scope.selectionGrid.tiles = tiles;
+		});
 	};
 
 	$scope.getWidth = function() {
-		return $scope.selectionGrid.tiles[0].length * 33;
+		var width = 0;
+
+		if ($scope.selectionGrid.tiles) {
+			width = $scope.selectionGrid.tiles[0].length * 33;
+		}
+
+		return width;
 	};
 
 
 	$scope.mapGrid = {
 		dragging: false,
 		tiles: null,
-		rowStyle: {
-			width: this.tiles[0].length*33
-		},
+		rowStyle: null,
+		tileStlye: {width: '32px', height: '32px'},
 
 		mouseDown: function(x, y) {
 			this.dragging = true;
-			this.setTiles(x, y);
+			this.paintSelection(x, y);
 		},
 
 		mouseUp: function(x, y) {
@@ -38,7 +52,7 @@ angular.module('Editing', ['ui.bootstrap', 'World', 'Selection', 'Tiles'])
 
 		mouseEnter: function(x, y) {
 			if (this.dragging) {
-				this.setTiles(x, y);
+				this.paintSelection(x, y);
 			}
 		},
 
@@ -46,7 +60,22 @@ angular.module('Editing', ['ui.bootstrap', 'World', 'Selection', 'Tiles'])
 
 		},
 
-		setTiles: function(x, y) {
+		moduleLeave: function() {
+
+		},
+
+		setTiles: function(tiles) {
+			this.tiles = tiles;
+			this.rowStyle = {
+				width: this.tiles[0].length*33
+			};
+		},
+
+		paintSelection: function(x, y) {
+			if (!$scope.selectedTiles) {
+				return;
+			}
+
 			var tiles = TileFactory.generateTiles($scope.selectedTiles);
 
 			for (var i = 0; i < tiles.length; i++) {
@@ -54,10 +83,6 @@ angular.module('Editing', ['ui.bootstrap', 'World', 'Selection', 'Tiles'])
 					this.tiles[y+i][x+j].img = tiles[i][j].img;
 				}
 			}
-		},
-
-		createTile: function() {
-			return {img: 'img/grass.png', highlight: 'img/trans.png'};
 		}
 	};
 
@@ -99,11 +124,11 @@ angular.module('Editing', ['ui.bootstrap', 'World', 'Selection', 'Tiles'])
 			this.highlightTile(this.tiles[y][x]);
 		},
 
-		setEndPoint: function(x, y) {
+		setEndPoint: function(endX, endY) {
 			this.unHighlightTiles();
 			$scope.selectedTiles = [];
 			var startPoint = this.startPointIndices;
-			var endPoint = {x: x, y: y};
+			var endPoint = {x: endX, y: endY};
 			for (var y = startPoint.y, baseY = 0; y <= endPoint.y; y++, baseY++) {
 				$scope.selectedTiles[baseY] = [];
 				for (var x = startPoint.x, baseX = 0; x <= endPoint.x; x++, baseX++) {
@@ -132,9 +157,8 @@ angular.module('Editing', ['ui.bootstrap', 'World', 'Selection', 'Tiles'])
 		dragging: false,
 		tiles: null,
 		borderStyle: {top: 0, left: 0},
-		rowStyle: {
-			width: this.tiles[0].length*8
-		},
+		rowStyle: null,
+		tileStlye: {width: '8px', height: '8px'},
 
 		mouseDown: function(y, x) {
 			this.dragging = true;
@@ -185,6 +209,13 @@ angular.module('Editing', ['ui.bootstrap', 'World', 'Selection', 'Tiles'])
 			$scope.borderStyle = {
 				top: yMinimap,
 				left: xMinimap
+			};
+		},
+
+		setTiles: function(tiles) {
+			this.tiles = tiles;
+			this.rowStyle = {
+				width: this.tiles[0].length*8
 			};
 		}
 	};

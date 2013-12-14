@@ -56,10 +56,6 @@ angular.module('tileEditor', ['angularFileUpload', 'ui.bootstrap', 'Editing', 'T
 
 	$scope.init = function() {
 		$scope.stopDrag();
-		/*$http.get('/tiles').success(function (tiles) {
-			console.log(tiles);
-			Tiles.tilesets[0].tiles = tiles;
-		});*/
 	};
 
 	$scope.stopDrag = function() {

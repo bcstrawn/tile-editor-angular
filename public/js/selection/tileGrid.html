@@ -15,9 +15,9 @@
 
 <div ng-repeat="row in tileGrid.tiles" class="tileRow" ng-style="tileGrid.rowStyle">
 	<div ng-repeat="tile in row" class="tile">
-		<img ng-src="{{tile.img}}">
-		<img ng-src="{{tile.highlight}}" class="highlight">
-		<div class="trans"
+		<img ng-src="{{tile.img}}" ng-style="tileGrid.tileStyle">
+		<img ng-src="{{tile.highlight}}" class="highlight" ng-style="tileGrid.tileStyle">
+		<div class="trans" ng-style="tileGrid.tileStyle"
 			ng-mousedown="tileGrid.mouseDown($index, $parent.$index)" 
 			ng-mouseup="tileGrid.mouseUp($index, $parent.$index)" 
 			ng-mouseenter="tileGrid.mouseEnter($index, $parent.$index)"

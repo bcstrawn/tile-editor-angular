@@ -90,8 +90,8 @@ angular.module('Selection', ['Tiles'])
 
 .directive('tileGrid', function() {
 	return {
-		restrict: 'E',
-		templateUrl: 'tileGrid.html',
+		restrict: 'A',
+		templateUrl: './js/selection/tileGrid.html',
 		// pass these two names from attrs into the template scope
 		scope: {
 			tileGrid: '='

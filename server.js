@@ -189,11 +189,11 @@ var isNumber = function(n) {
   return !isNaN(parseFloat(n)) && isFinite(n);
 };
 
-/*app.get('/tiles', function(req, res) {
+app.get('/tiles', function(req, res) {
 	getSprites('./public/img/cave', 'png', function (tiles) {
 		res.send(tiles);
 	});
-});*/
+});
 
 app.post('/world', function(req, res) {
 	world = req.body;

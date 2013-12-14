@@ -32,6 +32,26 @@ angular.module('Tiles', ['ngResource'])
 			}
 
 			return newTiles;
+		},
+
+		generateBlankMap: function(height, width, tileType) {
+			var map = [];
+
+			for (var y = 0; y < height; y++) {
+				map[y] = [];
+
+				for (var x = 0; x < width; x++) {
+					map[y][x] = this.generateTile(tileType);
+				}
+			}
+
+			return map;
+		},
+
+		generateTile: function(tileType) {
+			if (tileType == 'grass') {
+				return {img: 'img/grass.png', highlight: 'img/trans.png'}; 
+			}
 		}
 	};
 }]);
