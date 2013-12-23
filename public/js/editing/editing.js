@@ -20,7 +20,7 @@ angular.module('Editing', ['ui.bootstrap', 'World', 'Selection', 'Tiles'])
 
 		$http.get('/tiles').success(function (tiles) {
 			console.log(tiles);
-			$scope.selectionGrid.tiles = tiles;
+			$scope.selectionGrid.tiles = $scope.prepareTiles(tiles);
 		});
 	};
 
@@ -34,12 +34,27 @@ angular.module('Editing', ['ui.bootstrap', 'World', 'Selection', 'Tiles'])
 		return width;
 	};
 
+	$scope.prepareTiles = function(tiles) {
+		if (Object.prototype.toString.call(tiles) === '[object Array]' && Object.prototype.toString.call(tiles[0]) === '[object Array]') {
+			for (var i = 0; i < tiles.length; i++) {
+				for (var j = 0; j < tiles[i].length; j++) {
+					tiles[i][j].highlight = 'img/trans.png';
+				}
+			}
+		} else {
+			console.log(typeof tiles);
+		}
+
+		return tiles;
+	};
+
 
 	$scope.mapGrid = {
 		dragging: false,
 		tiles: null,
 		rowStyle: null,
 		tileStlye: {width: '32px', height: '32px'},
+		hasBorder: true,
 
 		mouseDown: function(x, y) {
 			this.dragging = true;
@@ -92,10 +107,11 @@ angular.module('Editing', ['ui.bootstrap', 'World', 'Selection', 'Tiles'])
 		tiles: null,
 		startPointIndices: {x: -1, y: -1},
 		defaultHighlight: 'img/highlight.png',
+		hasBorder: true,
 
 		mouseDown: function(x, y) {
 			this.dragging = true;
-			$scope.setStartPoint(x, y);
+			this.setStartPoint(x, y);
 		},
 
 		mouseUp: function(x, y) {
@@ -104,7 +120,7 @@ angular.module('Editing', ['ui.bootstrap', 'World', 'Selection', 'Tiles'])
 
 		mouseEnter: function(x, y) {
 			if (this.dragging) {
-				$scope.setEndPoint(x, y);
+				this.setEndPoint(x, y);
 			}
 		},
 
@@ -158,20 +174,20 @@ angular.module('Editing', ['ui.bootstrap', 'World', 'Selection', 'Tiles'])
 		tiles: null,
 		borderStyle: {top: 0, left: 0},
 		rowStyle: null,
-		tileStlye: {width: '8px', height: '8px'},
+		tileStyle: {width: 8, height: 8},
 
-		mouseDown: function(y, x) {
+		mouseDown: function(x, y) {
 			this.dragging = true;
-			$scope.goTo(x, y);
+			this.goTo(x, y);
 		},
 
 		mouseUp: function() {
 			this.dragging = false;
 		},
 
-		mouseEnter: function(y, x) {
+		mouseEnter: function(x, y) {
 			if (this.dragging) {
-				$scope.goTo(x, y);
+				this.goTo(x, y);
 			}
 		},
 
@@ -206,7 +222,7 @@ angular.module('Editing', ['ui.bootstrap', 'World', 'Selection', 'Tiles'])
 				yMinimap = 38;
 			}
 
-			$scope.borderStyle = {
+			this.borderStyle = {
 				top: yMinimap,
 				left: xMinimap
 			};
@@ -235,11 +251,11 @@ angular.module('Editing', ['ui.bootstrap', 'World', 'Selection', 'Tiles'])
 			$('#selectionBox').width($scope.widths.b - xDiff);
 			// position = {x: e.pageX, y: e.pageY};
 
-			/*var mapWidth = $('#map').width();
-			var barWidth = $('#mover').width();
-			var viewWidth = $('#viewportBox').width();
-			var selectWidth = $('#selectionBox').width();
-			console.log(viewWidth, '+', selectWidth, '+', barWidth, '=', viewWidth + selectWidth + barWidth, '=', mapWidth, '?');*/
+			// var mapWidth = $('#map').width();
+			// var barWidth = $('#mover').width();
+			// var viewWidth = $('#viewportBox').width();
+			// var selectWidth = $('#selectionBox').width();
+			// console.log(viewWidth, '+', selectWidth, '+', barWidth, '=', viewWidth + selectWidth + barWidth, '=', mapWidth, '?');
 		}
 	};
 

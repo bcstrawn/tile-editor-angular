@@ -4,9 +4,12 @@ body {
 
 .tile {
 	display: inline-block;
+	position: relative;
+}
+
+.border {
 	border-bottom: 1px solid black;
 	border-right: 1px solid black;
-	position: relative;
 }
 
 .trans {
@@ -67,7 +70,6 @@ body {
 
 .tileRow {
 	display: block;
-	margin: auto;
 }
 
 #editor {

@@ -14,7 +14,7 @@
 <div id="border" ng-style="borderStyle" ng-mouseup="tileUp()"></div> -->
 
 <div ng-repeat="row in tileGrid.tiles" class="tileRow" ng-style="tileGrid.rowStyle">
-	<div ng-repeat="tile in row" class="tile">
+	<div ng-repeat="tile in row" class="tile" ng-class="{border: tileGrid.hasBorder}" ng-style="tileGrid.tileStyle">
 		<img ng-src="{{tile.img}}" ng-style="tileGrid.tileStyle">
 		<img ng-src="{{tile.highlight}}" class="highlight" ng-style="tileGrid.tileStyle">
 		<div class="trans" ng-style="tileGrid.tileStyle"
