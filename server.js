@@ -10,46 +10,10 @@ app.configure(function() {
 	app.use(express.bodyParser());
 });
 
-/*Array.prototype.forEach = function(callback){
-	for (var i = 0; i < this.length; i++) {
-		callback(this[i], i);
-	}
-};*/
 
-Array.prototype.select = function(callback, options){
-	var results = [];
-
-	for (var i = 0; i < this.length; i++) {
-		var result = callback(this[i], i);
-
-		if (result !== null && result !== undefined) {
-			if (!options || !options.unique || results.indexOf(result) === -1) {
-				results.push(result);
-			}
-		}
-	}
-
-	if (results.length === 0 && (!options || !options.returnEmpty)) {
-		results = null;
-	} else if (results.length === 1 && (!options || !options.forceArray)) {
-		results = results[0];
-	}
-
-	return results;
+var isNumber = function(n) {
+  return !isNaN(parseFloat(n)) && isFinite(n);
 };
-
-Array.prototype.where = function(callback){
-	var results = [];
-
-	for (var i = 0; i < this.length; i++) {
-		if (callback(this[i])) {
-			results.push(this[i]);
-		}
-	}
-
-	return results;
-};
-
 
 /*var tiles = [
 	[
@@ -62,8 +26,6 @@ Array.prototype.where = function(callback){
 ];*/
 
 var world = null;
-
-
 
 var splitImage = function(path) {
 	var cmd = 'convert ' + path + ' -crop 16x16 -filter Point -resize x32 +antialias ' + path;
@@ -141,7 +103,7 @@ var getSprites = function(directory, type, callback) {
 	fs.readdir(directory, function(err, files) {
 		if (err) throw err;
 
-		var images = files.where(function(file) {
+		var images = files.filter(function(file) {
 			return file.split('.').pop() === type;
 		});
 
@@ -156,7 +118,7 @@ var getSprites = function(directory, type, callback) {
 		var source = tiles.pop();
 		var folder = directory.split('/').pop();
 
-		tiles = tiles.reverse().select(function (tile) {
+		tiles = tiles.reverse().map(function (tile) {
 			return {img: 'img/' + folder + '/' + tile};
 		});
 
@@ -183,10 +145,6 @@ var getSprites = function(directory, type, callback) {
 			callback(arrangedTiles);
 		});
 	});
-};
-
-var isNumber = function(n) {
-  return !isNaN(parseFloat(n)) && isFinite(n);
 };
 
 app.get('/tiles', function(req, res) {
@@ -221,13 +179,13 @@ app.get('/tilesets', function (req, res) {
 	fs.readdir('./public/img', function (err, files) {
 		if (err) throw err;
 
-		var folders = files.select(function (file) {
-			if (file.split('.').length === 1) {
-				return {
-					img: 'img/' + file + '/' + file + '.png',
-					name: file
-				};
-			}
+		var folders = files.filter(function (file) {
+			return file.split('.').length === 1;
+		}).map(function (file) {
+			return {
+				img: 'img/' + file + '/' + file + '.png',
+				name: file
+			};
 		});
 
 		var pending = folders.length;
